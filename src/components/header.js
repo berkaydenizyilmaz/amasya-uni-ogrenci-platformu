@@ -1,3 +1,5 @@
+'use client';
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,12 +12,25 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import Link from "next/link";
 import Image from "next/image";
+import LanguageSwitcher from "@/components/language-switcher";
+import { t } from "@/lib/i18n";
+import { useEffect, useState } from "react";
 
 /**
  * Ana sayfa header bileşeni
  * @returns {JSX.Element} Header bileşeni
  */
 export default function Header() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-theme-primary/20 bg-theme-bg/95 backdrop-blur supports-[backdrop-filter]:bg-theme-bg/60">
       <div className="container mx-auto px-4">
@@ -24,18 +39,18 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2 transition-colors hover:opacity-90">
             <Image src="/logo.png" alt="Logo" width={32} height={32} />
             <span className="text-xl font-bold bg-gradient-to-r from-theme-primary to-theme-primary-hover bg-clip-text text-transparent">
-              AÜ Öğrenci Platformu
+              {t('common.siteName')}
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center space-x-4">
             <NavigationMenu>
               <NavigationMenuList className="space-x-1">
                 {/* Üniversitemiz */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
-                    Üniversitemiz
+                    {t('common.menu.university')}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-theme-bg border border-theme-primary/20">
@@ -43,10 +58,10 @@ export default function Header() {
                         <Link href="/universite/genel-bilgi" legacyBehavior passHref>
                           <NavigationMenuLink className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-theme-primary/20 to-theme-primary/10 p-6 no-underline outline-none focus:shadow-md">
                             <div className="mb-2 mt-4 text-lg font-medium text-theme-text">
-                              Genel Bilgi
+                              {t('common.menu.generalInfo')}
                             </div>
                             <p className="text-sm leading-tight text-theme-text-muted">
-                              Üniversitemiz hakkında detaylı bilgi alın
+                              {t('common.menu.generalInfoDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
@@ -54,19 +69,23 @@ export default function Header() {
                       <li>
                         <Link href="/universite/fakulteler" legacyBehavior passHref>
                           <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
-                            <div className="text-sm font-medium leading-none text-theme-text">Fakülteler</div>
+                            <div className="text-sm font-medium leading-none text-theme-text">
+                              {t('common.menu.faculties')}
+                            </div>
                             <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
-                              Fakültelerimiz ve bölümlerimiz
+                              {t('common.menu.facultiesDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
                       </li>
                       <li>
                         <Link href="/universite/akademik-takvim" legacyBehavior passHref>
-                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[#06B6D4]/10 hover:text-[#0891B2]">
-                            <div className="text-sm font-medium leading-none text-[#334155]">Akademik Takvim</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-[#334155]/70">
-                              Akademik yıl planı ve önemli tarihler
+                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                            <div className="text-sm font-medium leading-none text-theme-text">
+                              {t('common.menu.calendar')}
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
+                              {t('common.menu.calendarDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
@@ -77,39 +96,43 @@ export default function Header() {
 
                 {/* Yurt ve Ulaşım */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-[#334155] hover:bg-[#06B6D4]/10 hover:text-[#0891B2]">
-                    Yurt ve Ulaşım
+                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                    {t('common.menu.dormitory')}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-[#F9F7F4] border border-[#06B6D4]/20">
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-theme-bg border border-theme-primary/20">
                       <li className="row-span-3">
                         <Link href="/yurt-ulasim/yurtlar" legacyBehavior passHref>
-                          <NavigationMenuLink className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-[#06B6D4]/20 to-[#06B6D4]/10 p-6 no-underline outline-none focus:shadow-md">
-                            <div className="mb-2 mt-4 text-lg font-medium text-[#334155]">
-                              Yurtlar
+                          <NavigationMenuLink className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-theme-primary/20 to-theme-primary/10 p-6 no-underline outline-none focus:shadow-md">
+                            <div className="mb-2 mt-4 text-lg font-medium text-theme-text">
+                              {t('common.menu.dorms')}
                             </div>
-                            <p className="text-sm leading-tight text-[#334155]/70">
-                              Yurt imkanları ve konaklama seçenekleri
+                            <p className="text-sm leading-tight text-theme-text-muted">
+                              {t('common.menu.dormsDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
                       </li>
                       <li>
                         <Link href="/yurt-ulasim/otobus-guzergahlari" legacyBehavior passHref>
-                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[#06B6D4]/10 hover:text-[#0891B2]">
-                            <div className="text-sm font-medium leading-none text-[#334155]">Otobüs Güzergahları</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-[#334155]/70">
-                              Kampüs ulaşım hatları
+                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                            <div className="text-sm font-medium leading-none text-theme-text">
+                              {t('common.menu.busRoutes')}
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
+                              {t('common.menu.busRoutesDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
                       </li>
                       <li>
                         <Link href="/yurt-ulasim/sefer-saatleri" legacyBehavior passHref>
-                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[#06B6D4]/10 hover:text-[#0891B2]">
-                            <div className="text-sm font-medium leading-none text-[#334155]">Sefer Saatleri</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-[#334155]/70">
-                              Güncel otobüs saatleri
+                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                            <div className="text-sm font-medium leading-none text-theme-text">
+                              {t('common.menu.busSchedule')}
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
+                              {t('common.menu.busScheduleDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
@@ -121,8 +144,8 @@ export default function Header() {
                 {/* Not Paylaşımı */}
                 <NavigationMenuItem>
                   <Link href="/not-paylasimi" legacyBehavior passHref>
-                    <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-[#06B6D4] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0891B2] hover:text-white focus:bg-[#0891B2] focus:text-white focus:outline-none disabled:pointer-events-none disabled:opacity-50">
-                      Not Paylaşımı
+                    <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-theme-primary px-4 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                      {t('common.menu.notes')}
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
@@ -130,47 +153,51 @@ export default function Header() {
                 {/* Etkinlikler */}
                 <NavigationMenuItem>
                   <Link href="/etkinlikler" legacyBehavior passHref>
-                    <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-[#06B6D4] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0891B2] hover:text-white focus:bg-[#0891B2] focus:text-white focus:outline-none disabled:pointer-events-none disabled:opacity-50">
-                      Etkinlikler
+                    <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-theme-primary px-4 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                      {t('common.menu.events')}
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
 
                 {/* Amasyamız */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-[#334155] hover:bg-[#06B6D4]/10 hover:text-[#0891B2]">
-                    Amasyamız
+                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                    {t('common.menu.amasya')}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-[#F9F7F4] border border-[#06B6D4]/20">
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-theme-bg border border-theme-primary/20">
                       <li className="row-span-3">
                         <Link href="/amasya/tarihi-yerler" legacyBehavior passHref>
-                          <NavigationMenuLink className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-[#06B6D4]/20 to-[#06B6D4]/10 p-6 no-underline outline-none focus:shadow-md">
-                            <div className="mb-2 mt-4 text-lg font-medium text-[#334155]">
-                              Tarihi Yerler
+                          <NavigationMenuLink className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-theme-primary/20 to-theme-primary/10 p-6 no-underline outline-none focus:shadow-md">
+                            <div className="mb-2 mt-4 text-lg font-medium text-theme-text">
+                              {t('common.menu.historicalPlaces')}
                             </div>
-                            <p className="text-sm leading-tight text-[#334155]/70">
-                              Amasya&apos;nın tarihi ve kültürel mirası
+                            <p className="text-sm leading-tight text-theme-text-muted">
+                              {t('common.menu.historicalPlacesDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
                       </li>
                       <li>
                         <Link href="/amasya/gezi-rotalari" legacyBehavior passHref>
-                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[#06B6D4]/10 hover:text-[#0891B2]">
-                            <div className="text-sm font-medium leading-none text-[#334155]">Gezi Rotaları</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-[#334155]/70">
-                              Önerilen gezi güzergahları
+                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                            <div className="text-sm font-medium leading-none text-theme-text">
+                              {t('common.menu.tourRoutes')}
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
+                              {t('common.menu.tourRoutesDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
                       </li>
                       <li>
                         <Link href="/amasya/yoresel-lezzetler" legacyBehavior passHref>
-                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[#06B6D4]/10 hover:text-[#0891B2]">
-                            <div className="text-sm font-medium leading-none text-[#334155]">Yöresel Lezzetler</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-[#334155]/70">
-                              Amasya&apos;nın eşsiz mutfağı
+                          <NavigationMenuLink className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                            <div className="text-sm font-medium leading-none text-theme-text">
+                              {t('common.menu.localFood')}
+                            </div>
+                            <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
+                              {t('common.menu.localFoodDesc')}
                             </p>
                           </NavigationMenuLink>
                         </Link>
@@ -180,13 +207,14 @@ export default function Header() {
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
+            <LanguageSwitcher />
           </div>
 
           {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-[#334155] hover:bg-[#06B6D4]/10">
-                <span className="sr-only">Menüyü aç</span>
+              <Button variant="ghost" size="icon" className="md:hidden text-theme-text hover:bg-theme-primary/10">
+                <span className="sr-only">{t('common.menu.openMenu')}</span>
                 <svg
                   className="h-6 w-6"
                   fill="none"
@@ -202,41 +230,44 @@ export default function Header() {
                 </svg>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#F9F7F4] border-l border-[#06B6D4]/20">
+            <SheetContent side="right" className="bg-theme-bg border-l border-theme-primary/20">
               <SheetHeader>
-                <SheetTitle className="text-[#334155]">Menü</SheetTitle>
+                <SheetTitle className="text-theme-text">{t('common.menu.menu')}</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col space-y-4 mt-6">
                 <Link 
                   href="/universite/genel-bilgi" 
-                  className="text-lg font-medium text-[#334155] transition-colors hover:text-[#0891B2]"
+                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover"
                 >
-                  Üniversitemiz
+                  {t('common.menu.university')}
                 </Link>
                 <Link 
                   href="/yurt-ulasim/yurtlar" 
-                  className="text-lg font-medium text-[#334155] transition-colors hover:text-[#0891B2]"
+                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover"
                 >
-                  Yurt ve Ulaşım
+                  {t('common.menu.dormitory')}
                 </Link>
                 <Link 
                   href="/not-paylasimi" 
-                  className="text-lg font-medium text-[#334155] transition-colors hover:text-[#0891B2]"
+                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover"
                 >
-                  Not Paylaşımı
+                  {t('common.menu.notes')}
                 </Link>
                 <Link 
                   href="/etkinlikler" 
-                  className="text-lg font-medium text-[#334155] transition-colors hover:text-[#0891B2]"
+                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover"
                 >
-                  Etkinlikler
+                  {t('common.menu.events')}
                 </Link>
                 <Link 
                   href="/amasya/tarihi-yerler" 
-                  className="text-lg font-medium text-[#334155] transition-colors hover:text-[#0891B2]"
+                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover"
                 >
-                  Amasyamız
+                  {t('common.menu.amasya')}
                 </Link>
+                <div className="pt-4">
+                  <LanguageSwitcher />
+                </div>
               </nav>
             </SheetContent>
           </Sheet>
