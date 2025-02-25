@@ -44,7 +44,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-theme-primary/20 bg-theme-bg/95 backdrop-blur supports-[backdrop-filter]:bg-theme-bg/60">
-      <div className="container mx-auto px-4">
+      <div className="mx-auto px-4">
         <nav className="flex h-16 items-center justify-between">
           {/* Logo ve Site Adı */}
           <Link href="/" className="flex items-center space-x-2 transition-colors hover:opacity-90">
@@ -54,12 +54,12 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
+          <div className="hidden md:flex items-center space-x-4">
             <NavigationMenu>
-              <NavigationMenuList className="flex items-center gap-4">
+              <NavigationMenuList className="flex items-center gap-1">
                 {/* Üniversitemiz */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-10 px-5 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
                     <Building2 className="w-4 h-4 mr-2" />
                     {t('common.menu.university')}
                   </NavigationMenuTrigger>
@@ -107,7 +107,7 @@ export default function Header() {
 
                 {/* Yurt ve Ulaşım */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-10 px-5 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
                     <Bus className="w-4 h-4 mr-2" />
                     {t('common.menu.dormitory')}
                   </NavigationMenuTrigger>
@@ -155,7 +155,7 @@ export default function Header() {
 
                 {/* Amasyamız */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-10 px-5 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
                     <Landmark className="w-4 h-4 mr-2" />
                     {t('common.menu.amasya')}
                   </NavigationMenuTrigger>
@@ -203,7 +203,7 @@ export default function Header() {
 
                 {/* Not Paylaşımı */}
                 <NavigationMenuItem>
-                  <Link href="/not-paylasimi" className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-theme-primary px-5 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                  <Link href="/not-paylasimi" className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-theme-primary px-4 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
                     <BookCopy className="w-4 h-4 mr-2" />
                     {t('common.menu.notes')}
                   </Link>
@@ -211,7 +211,7 @@ export default function Header() {
 
                 {/* Etkinlikler */}
                 <NavigationMenuItem>
-                  <Link href="/etkinlikler" className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-theme-primary px-5 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                  <Link href="/etkinlikler" className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-theme-primary px-4 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
                     <Calendar className="w-4 h-4 mr-2" />
                     {t('common.menu.events')}
                   </Link>
@@ -220,163 +220,141 @@ export default function Header() {
 
               <NavigationMenuViewport className="absolute top-[100%] left-0 w-full origin-top-center overflow-hidden rounded-md border border-theme-primary/20 bg-theme-bg text-theme-text shadow-lg animate-in data-[motion=from-start]:animate-in data-[motion=from-end]:animate-out data-[motion=to-end]:animate-in" />
             </NavigationMenu>
-
-            <div className="flex items-center gap-6">
-              <LanguageSwitcher />
-              
-              {status === 'authenticated' ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={session.user.image} alt={session.user.name} />
-                        <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <div className="flex items-center justify-start gap-2 p-2">
-                      <div className="flex flex-col space-y-1 leading-none">
-                        {session.user.name && (
-                          <p className="font-medium text-theme-text">{session.user.name}</p>
-                        )}
-                        {session.user.email && (
-                          <p className="w-[200px] truncate text-sm text-theme-text-muted">
-                            {session.user.email}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/profil">Profil</Link>
-                    </DropdownMenuItem>
-                    {session.user.role === 'ADMIN' && (
-                      <DropdownMenuItem asChild>
-                        <Link href="/admin">Yönetim Paneli</Link>
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className="text-red-500 focus:text-red-500"
-                      onSelect={() => signOut()}
-                    >
-                      Çıkış Yap
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" asChild>
-                    <Link href="/giris">Giriş Yap</Link>
-                  </Button>
-                  <Button className="bg-theme-primary hover:bg-theme-primary-hover text-white" asChild>
-                    <Link href="/kayit">Kayıt Ol</Link>
-                  </Button>
-                </div>
-              )}
-            </div>
           </div>
 
-          {/* Mobile Menu */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-theme-text hover:bg-theme-primary/10">
-                <span className="sr-only">{t('common.menu.openMenu')}</span>
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-theme-bg border-l border-theme-primary/20">
-              <SheetHeader>
-                <SheetTitle className="text-theme-text">{t('common.menu.menu')}</SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col space-y-4 mt-6">
-                <Link 
-                  href="/universite/genel-bilgi" 
-                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
-                >
-                  <Building2 className="w-5 h-5 mr-2" />
-                  {t('common.menu.university')}
-                </Link>
-                <Link 
-                  href="/yurt-ulasim/yurtlar" 
-                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
-                >
-                  <Bus className="w-5 h-5 mr-2" />
-                  {t('common.menu.dormitory')}
-                </Link>
-                <Link 
-                  href="/not-paylasimi" 
-                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
-                >
-                  <BookCopy className="w-5 h-5 mr-2" />
-                  {t('common.menu.notes')}
-                </Link>
-                <Link 
-                  href="/etkinlikler" 
-                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
-                >
-                  <Calendar className="w-5 h-5 mr-2" />
-                  {t('common.menu.events')}
-                </Link>
-                <Link 
-                  href="/amasya/tarihi-yerler" 
-                  className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
-                >
-                  <Landmark className="w-5 h-5 mr-2" />
-                  {t('common.menu.amasya')}
-                </Link>
-                <div className="pt-4">
-                  <LanguageSwitcher />
-                </div>
-                {status === 'authenticated' ? (
-                  <div className="space-y-4 pt-4 border-t border-theme-primary/20">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={session.user.image} alt={session.user.name} />
-                        <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium text-theme-text">{session.user.name}</span>
-                        <span className="text-xs text-theme-text-muted">{session.user.email}</span>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Link 
-                        href="/profil"
-                        className="block text-sm text-theme-text hover:text-theme-primary-hover"
-                      >
-                        Profil
-                      </Link>
-                      {session.user.role === 'ADMIN' && (
-                        <Link 
-                          href="/admin"
-                          className="block text-sm text-theme-text hover:text-theme-primary-hover"
-                        >
+          {/* Sağ Bölüm - Dil Seçici ve Giriş/Profil */}
+          <div className="flex items-center gap-6">
+            <LanguageSwitcher />
+            
+            {/* Giriş/Kayıt veya Profil */}
+            {status === "authenticated" ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={session?.user?.image} alt={session?.user?.name} />
+                      <AvatarFallback className="bg-theme-primary text-theme-bg font-medium">
+                        {session?.user?.name?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuItem className="flex flex-col items-start p-2">
+                    <div className="text-sm font-medium text-theme-text">{session?.user?.name}</div>
+                    <div className="text-xs text-theme-text-muted">{session?.user?.email}</div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {session?.user?.role === "ADMIN" && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin" className="text-theme-text hover:text-theme-primary">
                           Yönetim Paneli
                         </Link>
-                      )}
-                      <button
-                        onClick={() => signOut()}
-                        className="block w-full text-left text-sm text-red-500 hover:text-red-600"
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem 
+                    className="text-red-500 hover:text-red-600 cursor-pointer" 
+                    onClick={() => signOut()}
+                  >
+                    Çıkış Yap
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="hidden md:flex items-center gap-2">
+                <Button 
+                  asChild 
+                  variant="ghost" 
+                  className="h-9 px-4 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover"
+                >
+                  <Link href="/giris">Giriş Yap</Link>
+                </Button>
+                <Button 
+                  asChild 
+                  className="h-9 px-4 bg-theme-primary text-theme-bg hover:bg-theme-primary-hover"
+                >
+                  <Link href="/kayit">Kayıt Ol</Link>
+                </Button>
+              </div>
+            )}
+
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden text-theme-text hover:bg-theme-primary/10">
+                  <span className="sr-only">{t('common.menu.openMenu')}</span>
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-theme-bg border-l border-theme-primary/20">
+                <SheetHeader>
+                  <SheetTitle className="text-theme-text">{t('common.menu.menu')}</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col space-y-4 mt-6">
+                  <Link 
+                    href="/universite/genel-bilgi" 
+                    className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
+                  >
+                    <Building2 className="w-5 h-5 mr-2" />
+                    {t('common.menu.university')}
+                  </Link>
+                  <Link 
+                    href="/yurt-ulasim/yurtlar" 
+                    className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
+                  >
+                    <Bus className="w-5 h-5 mr-2" />
+                    {t('common.menu.dormitory')}
+                  </Link>
+                  <Link 
+                    href="/not-paylasimi" 
+                    className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
+                  >
+                    <BookCopy className="w-5 h-5 mr-2" />
+                    {t('common.menu.notes')}
+                  </Link>
+                  <Link 
+                    href="/etkinlikler" 
+                    className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
+                  >
+                    <Calendar className="w-5 h-5 mr-2" />
+                    {t('common.menu.events')}
+                  </Link>
+                  <Link 
+                    href="/amasya/tarihi-yerler" 
+                    className="text-lg font-medium text-theme-text transition-colors hover:text-theme-primary-hover inline-flex items-center"
+                  >
+                    <Landmark className="w-5 h-5 mr-2" />
+                    {t('common.menu.amasya')}
+                  </Link>
+                  <div className="pt-4">
+                    <LanguageSwitcher />
+                  </div>
+
+                  {/* Mobil Giriş/Kayıt */}
+                  {status !== "authenticated" && (
+                    <div className="flex flex-col gap-2 pt-4 border-t border-theme-primary/20">
+                      <Button 
+                        asChild 
+                        variant="ghost" 
+                        className="w-full h-10 text-theme-text hover:bg-theme-primary/10"
                       >
-                        Çıkış Yap
-                      </button>
+                        <Link href="/giris">Giriş Yap</Link>
+                      </Button>
+                      <Button 
+                        asChild 
+                        className="w-full h-10 bg-theme-primary text-theme-bg hover:bg-theme-primary-hover"
+                      >
+                        <Link href="/kayit">Kayıt Ol</Link>
+                      </Button>
                     </div>
-                  </div>
-                ) : (
-                  <div className="space-y-2 pt-4 border-t border-theme-primary/20">
-                    <Button variant="ghost" className="w-full justify-start" asChild>
-                      <Link href="/giris">Giriş Yap</Link>
-                    </Button>
-                    <Button className="w-full justify-start bg-theme-primary hover:bg-theme-primary-hover text-white" asChild>
-                      <Link href="/kayit">Kayıt Ol</Link>
-                    </Button>
-                  </div>
-                )}
-              </nav>
-            </SheetContent>
-          </Sheet>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </nav>
       </div>
     </header>
