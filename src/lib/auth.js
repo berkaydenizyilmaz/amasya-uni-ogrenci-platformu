@@ -47,15 +47,31 @@ export const authOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
+        token.id = user.id;
         token.role = user.role;
+        token.name = user.name;
+        token.email = user.email;
       }
+
+      if (trigger === "update" && session) {
+        token.id = session.user.id;
+        token.role = session.user.role;
+        token.name = session.user.name;
+        token.email = session.user.email;
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.role = token.role;
+        session.user = {
+          id: token.id,
+          name: token.name,
+          email: token.email,
+          role: token.role
+        };
       }
       return session;
     }
@@ -66,5 +82,6 @@ export const authOptions = {
   },
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 gün
   },
 }; 

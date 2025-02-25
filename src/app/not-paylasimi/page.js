@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, MessageCircle, Calendar, User, FileText, X } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { PlusCircle, MessageCircle, Calendar, FileText, X, Heart, Share2, Bookmark } from "lucide-react";
 import Link from "next/link";
 import { t } from "@/lib/i18n";
 
@@ -63,7 +64,6 @@ export default function NotesPage() {
       'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     ];
 
-    // Dosya kontrolü
     const invalidFiles = files.filter(
       file => !allowedTypes.includes(file.type) || file.size > maxSize
     );
@@ -100,14 +100,19 @@ export default function NotesPage() {
         body: formData,
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Not paylaşılırken bir hata oluştu");
+        throw new Error(data.error || "Not paylaşılırken bir hata oluştu");
       }
+
+      console.log("API Response:", data);
 
       setIsDialogOpen(false);
       setSelectedFiles([]);
       fetchPosts();
     } catch (error) {
+      console.error("Post error:", error);
       setError(error.message);
     }
   };
@@ -125,131 +130,125 @@ export default function NotesPage() {
     <main className="min-h-screen bg-theme-bg">
       <Header />
       
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-theme-primary to-theme-primary-hover py-16 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-theme-bg mb-6">
-            Not Paylaşım Platformu
-          </h1>
-          <p className="text-xl text-theme-bg/90 max-w-2xl mx-auto mb-8">
-            Ders notlarınızı paylaşın, arkadaşlarınızla bilgi alışverişinde bulunun
-          </p>
+      {/* Ana İçerik */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto">
+          {/* Not Paylaş Kartı */}
           {session ? (
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-theme-bg text-theme-primary hover:bg-theme-bg/90">
-                  <PlusCircle className="w-5 h-5 mr-2" />
-                  Not Paylaş
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Yeni Not Paylaş</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-                  <div className="space-y-2">
-                    <label htmlFor="title" className="text-sm font-medium">
-                      Başlık
-                    </label>
-                    <Input
-                      id="title"
-                      name="title"
-                      required
-                      placeholder="Not başlığı"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="category" className="text-sm font-medium">
-                      Kategori
-                    </label>
-                    <Select name="category" required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Kategori seçin" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="DERS_NOTU">Ders Notu</SelectItem>
-                        <SelectItem value="SINAV_NOTU">Sınav Notu</SelectItem>
-                        <SelectItem value="OZET">Özet</SelectItem>
-                        <SelectItem value="KAYNAK">Kaynak</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="content" className="text-sm font-medium">
-                      İçerik
-                    </label>
-                    <Textarea
-                      id="content"
-                      name="content"
-                      required
-                      placeholder="Not içeriği"
-                      rows={5}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">
-                      Dosyalar
-                    </label>
-                    <div className="border-2 border-dashed border-theme-primary/20 rounded-lg p-4">
-                      <Input
-                        type="file"
-                        onChange={handleFileChange}
-                        multiple
-                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
-                        className="mb-2"
-                      />
-                      <p className="text-xs text-theme-text-muted">
-                        Desteklenen formatlar: PDF, Word, Excel, PowerPoint, JPEG, PNG (max: 10MB)
-                      </p>
-                      {fileError && (
-                        <p className="text-red-500 text-sm mt-1">{fileError}</p>
-                      )}
-                      {selectedFiles.length > 0 && (
-                        <div className="mt-4 space-y-2">
-                          {selectedFiles.map((file, index) => (
-                            <div key={index} className="flex items-center justify-between bg-theme-primary/5 rounded p-2">
-                              <div className="flex items-center gap-2">
-                                <FileText className="w-4 h-4" />
-                                <span className="text-sm truncate">{file.name}</span>
-                              </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removeFile(index)}
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
+            <Card className="mb-8 border-theme-primary/10 bg-white">
+              <CardContent className="p-4">
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <div className="flex items-center gap-4 cursor-pointer">
+                      <Avatar className="w-10 h-10">
+                        <AvatarFallback>
+                          {session.user.name?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 p-3 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <span className="text-theme-text-muted">Not paylaşmak için tıkla...</span>
+                      </div>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Yeni Not Paylaş</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                      <div className="space-y-2">
+                        <Input
+                          id="title"
+                          name="title"
+                          required
+                          placeholder="Not başlığı"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Select name="category" required>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Kategori seçin" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="DERS_NOTU">Ders Notu</SelectItem>
+                            <SelectItem value="SINAV_NOTU">Sınav Notu</SelectItem>
+                            <SelectItem value="OZET">Özet</SelectItem>
+                            <SelectItem value="KAYNAK">Kaynak</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Textarea
+                          id="content"
+                          name="content"
+                          required
+                          placeholder="Not içeriği"
+                          rows={5}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <div className="border-2 border-dashed border-theme-primary/20 rounded-lg p-4">
+                          <Input
+                            type="file"
+                            onChange={handleFileChange}
+                            multiple
+                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
+                            className="mb-2"
+                          />
+                          <p className="text-xs text-theme-text-muted">
+                            Desteklenen formatlar: PDF, Word, Excel, PowerPoint, JPEG, PNG (max: 10MB)
+                          </p>
+                          {fileError && (
+                            <p className="text-red-500 text-sm mt-1">{fileError}</p>
+                          )}
+                          {selectedFiles.length > 0 && (
+                            <div className="mt-4 space-y-2">
+                              {selectedFiles.map((file, index) => (
+                                <div key={index} className="flex items-center justify-between bg-theme-primary/5 rounded p-2">
+                                  <div className="flex items-center gap-2">
+                                    <FileText className="w-4 h-4" />
+                                    <span className="text-sm truncate">{file.name}</span>
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => removeFile(index)}
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              ))}
                             </div>
-                          ))}
+                          )}
+                        </div>
+                      </div>
+                      {error && (
+                        <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">
+                          {error}
                         </div>
                       )}
-                    </div>
-                  </div>
-                  {error && (
-                    <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">
-                      {error}
-                    </div>
-                  )}
-                  <div className="flex justify-end">
-                    <Button type="submit">Paylaş</Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
+                      <div className="flex justify-end">
+                        <Button type="submit">Paylaş</Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
           ) : (
-            <Button asChild className="bg-theme-bg text-theme-primary hover:bg-theme-bg/90">
-              <Link href="/giris">
-                Paylaşım yapmak için giriş yapın
-              </Link>
-            </Button>
+            <Card className="mb-8 border-theme-primary/10 bg-white">
+              <CardContent className="p-6 text-center">
+                <p className="text-theme-text-muted mb-4">
+                  Not paylaşmak için giriş yapmalısınız
+                </p>
+                <Button asChild variant="default">
+                  <Link href="/giris">Giriş Yap</Link>
+                </Button>
+              </CardContent>
+            </Card>
           )}
-        </div>
-      </section>
 
-      {/* Posts Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+          {/* Notlar Listesi */}
           {loading ? (
             <div className="text-center text-theme-text-muted">Yükleniyor...</div>
           ) : error ? (
@@ -257,51 +256,91 @@ export default function NotesPage() {
           ) : posts.length === 0 ? (
             <div className="text-center text-theme-text-muted">Henüz paylaşılan not bulunmuyor</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-4">
               {posts.map((post) => (
-                <Link key={post.id} href={`/not-paylasimi/${post.id}`}>
-                  <Card className="h-full hover:shadow-lg transition-all cursor-pointer border-theme-primary/10">
-                    <CardHeader>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2 text-theme-text-muted">
-                          <User className="w-4 h-4" />
-                          <span className="text-sm">{post.author.name}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-theme-text-muted">
-                          <Calendar className="w-4 h-4" />
-                          <span className="text-sm">
+                <Card key={post.id} className="border-theme-primary/10 bg-white hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    {/* Kullanıcı Bilgisi */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarFallback>
+                            {post.author.name?.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-theme-text">{post.author.name}</p>
+                          <p className="text-sm text-theme-text-muted">
                             {new Date(post.createdAt).toLocaleDateString('tr-TR')}
-                          </span>
+                          </p>
                         </div>
                       </div>
-                      <CardTitle className="line-clamp-2">{post.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-theme-text-muted line-clamp-3 mb-4">
-                        {post.content}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-theme-text-muted" />
-                          <span className="text-sm text-theme-text-muted">
-                            {post.files.length} dosya
-                          </span>
+                      <Button variant="ghost" size="icon">
+                        <Share2 className="w-5 h-5 text-theme-text-muted" />
+                      </Button>
+                    </div>
+
+                    {/* İçerik */}
+                    <Link href={`/not-paylasimi/${post.id}`}>
+                      <div className="space-y-2 mb-4">
+                        <h3 className="text-lg font-semibold text-theme-text hover:text-theme-primary transition-colors">
+                          {post.title}
+                        </h3>
+                        <p className="text-theme-text-muted line-clamp-3">
+                          {post.content}
+                        </p>
+                      </div>
+                    </Link>
+
+                    {/* Dosyalar */}
+                    {post.files.length > 0 && (
+                      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-2 text-sm text-theme-text-muted mb-2">
+                          <FileText className="w-4 h-4" />
+                          <span>{post.files.length} dosya</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <MessageCircle className="w-4 h-4 text-theme-text-muted" />
-                          <span className="text-sm text-theme-text-muted">
-                            {post._count.comments} yorum
-                          </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          {post.files.slice(0, 2).map((file) => (
+                            <div
+                              key={file.id}
+                              className="flex items-center gap-2 p-2 bg-white rounded border border-gray-100"
+                            >
+                              <FileText className="w-4 h-4 text-theme-primary" />
+                              <span className="text-sm truncate">{file.name}</span>
+                            </div>
+                          ))}
+                          {post.files.length > 2 && (
+                            <div className="text-sm text-theme-primary">
+                              +{post.files.length - 2} daha
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                    )}
+
+                    {/* Etkileşim Butonları */}
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <div className="flex items-center gap-6">
+                        <Button variant="ghost" size="sm" className="text-theme-text-muted hover:text-red-500">
+                          <Heart className="w-5 h-5 mr-2" />
+                          <span>Beğen</span>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="text-theme-text-muted hover:text-theme-primary">
+                          <MessageCircle className="w-5 h-5 mr-2" />
+                          <span>{post._count.comments}</span>
+                        </Button>
+                      </div>
+                      <Button variant="ghost" size="sm" className="text-theme-text-muted hover:text-theme-primary">
+                        <Bookmark className="w-5 h-5" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
         </div>
-      </section>
+      </div>
     </main>
   );
 } 

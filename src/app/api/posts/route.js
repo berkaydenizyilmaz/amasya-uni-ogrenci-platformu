@@ -73,11 +73,26 @@ export async function GET() {
  */
 export async function POST(request) {
   try {
+    // Session kontrolü
     const session = await getServerSession(authOptions);
+    console.log("Session data:", JSON.stringify(session, null, 2));
 
-    if (!session) {
+    if (!session?.user?.email) {
       return NextResponse.json(
         { error: "Bu işlem için giriş yapmanız gerekiyor" },
+        { status: 401 }
+      );
+    }
+
+    // Kullanıcıyı veritabanından al
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { id: true }
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Kullanıcı bulunamadı" },
         { status: 401 }
       );
     }
@@ -97,25 +112,36 @@ export async function POST(request) {
 
     // Dosyaları yükle ve veritabanına kaydet
     const filePromises = files.map(async (file) => {
-      // Dosya tipini belirle
-      const fileType = getFileType(file.type);
-      
-      // Dosyayı buffer'a dönüştür
-      const buffer = Buffer.from(await file.arrayBuffer());
-      
-      // Dosyayı Cloudinary'ye yükle
-      const uploadedFile = await uploadToCloudinary(buffer);
+      try {
+        console.log("Processing file:", file.name, "Type:", file.type, "Size:", file.size);
+        
+        // Dosya tipini belirle
+        const fileType = getFileType(file.type);
+        
+        // Dosyayı buffer'a dönüştür
+        const buffer = Buffer.from(await file.arrayBuffer());
+        
+        // Dosyayı Cloudinary'ye yükle
+        console.log("Uploading to Cloudinary...");
+        const uploadedFile = await uploadToCloudinary(buffer);
+        console.log("Cloudinary response:", uploadedFile);
 
-      // Dosya bilgilerini veritabanına kaydet
-      return {
-        name: file.name,
-        url: uploadedFile.secure_url,
-        type: fileType,
-        size: file.size,
-      };
+        // Dosya bilgilerini veritabanına kaydet
+        return {
+          name: file.name,
+          url: uploadedFile.secure_url,
+          type: fileType,
+          size: file.size,
+        };
+      } catch (error) {
+        console.error("File upload error:", error);
+        throw new Error(`${file.name} dosyası yüklenirken hata oluştu: ${error.message}`);
+      }
     });
 
     const uploadedFiles = await Promise.all(filePromises);
+
+    console.log("Creating post with user ID:", user.id);
 
     // Postu oluştur
     const post = await prisma.post.create({
@@ -123,7 +149,11 @@ export async function POST(request) {
         title: validatedData.title,
         content: validatedData.content,
         category: validatedData.category,
-        authorId: session.user.id,
+        author: {
+          connect: {
+            id: user.id
+          }
+        },
         files: {
           create: uploadedFiles,
         },
@@ -141,15 +171,16 @@ export async function POST(request) {
     return NextResponse.json(post);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      const errorMessages = error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(', ');
       return NextResponse.json(
-        { error: "Geçersiz veri" },
+        { error: `Geçersiz veri: ${errorMessages}` },
         { status: 400 }
       );
     }
 
     console.error("Post create error:", error);
     return NextResponse.json(
-      { error: "Not paylaşılırken bir hata oluştu" },
+      { error: error.message || "Not paylaşılırken bir hata oluştu" },
       { status: 500 }
     );
   }
