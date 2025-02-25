@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { z } from "zod";
 
 const postSchema = z.object({
@@ -55,8 +56,6 @@ export async function GET() {
       updatedAt: post.updatedAt.toISOString(),
     }));
 
-    console.log("Formatted response:", JSON.stringify(formattedPosts, null, 2));
-
     return NextResponse.json(formattedPosts);
   } catch (error) {
     console.error("Posts fetch error:", error);
@@ -101,13 +100,16 @@ export async function POST(request) {
       // Dosya tipini belirle
       const fileType = getFileType(file.type);
       
-      // Dosyayı S3'e yükle
-      const uploadedFile = await uploadToS3(file);
+      // Dosyayı buffer'a dönüştür
+      const buffer = Buffer.from(await file.arrayBuffer());
+      
+      // Dosyayı Cloudinary'ye yükle
+      const uploadedFile = await uploadToCloudinary(buffer);
 
       // Dosya bilgilerini veritabanına kaydet
       return {
         name: file.name,
-        url: uploadedFile.url,
+        url: uploadedFile.secure_url,
         type: fileType,
         size: file.size,
       };
@@ -175,35 +177,4 @@ function getFileType(mimeType) {
     return 'POWERPOINT';
   }
   return 'OTHER';
-}
-
-/**
- * Dosyayı S3'e yükler
- * @param {File} file Yüklenecek dosya
- * @returns {Promise<Object>} Yüklenen dosya bilgileri
- */
-async function uploadToS3(file) {
-  // TODO: S3 yükleme işlemi
-  // Şimdilik dosyayı public/uploads klasörüne kaydedelim
-  const fileName = `${Date.now()}-${file.name}`;
-  const filePath = `/uploads/${fileName}`;
-  
-  // Dosyayı kaydet
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-  
-  // Dosya sistemine kaydet
-  const fs = require('fs');
-  const path = require('path');
-  
-  const uploadDir = path.join(process.cwd(), 'public/uploads');
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-  
-  fs.writeFileSync(path.join(uploadDir, fileName), buffer);
-  
-  return {
-    url: filePath,
-  };
 } 
