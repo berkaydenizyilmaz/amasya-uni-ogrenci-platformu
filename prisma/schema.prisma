@@ -44,17 +44,20 @@ model User {
   id            String    @id @default(cuid())
   name          String
   email         String    @unique
-  emailVerified DateTime?
   password      String
-  image         String?
   role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
   comments      Comment[]
-  events        Event[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 enum Role {
@@ -66,44 +69,49 @@ model Post {
   id        String    @id @default(cuid())
   title     String
   content   String    @db.Text
-  files     String[]  // Dosya URL'leri
-  category  String    // Ders/Kategori
+  category  Category
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
+  files     File[]
   comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
+model File {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  type      FileType
+  size      Int
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+}
+
 model Comment {
   id        String   @id @default(cuid())
-  content   String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
-model Event {
-  id          String      @id @default(cuid())
-  title       String
-  description String      @db.Text
-  startDate   DateTime
-  endDate     DateTime
-  location    String
-  image       String?
-  category    String
-  status      EventStatus @default(PENDING)
-  author      User        @relation(fields: [authorId], references: [id])
-  authorId    String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+enum Category {
+  DERS_NOTU
+  SINAV_NOTU
+  OZET
+  KAYNAK
 }
 
-enum EventStatus {
-  PENDING
-  APPROVED
-  REJECTED
+enum FileType {
+  PDF
+  IMAGE
+  WORD
+  EXCEL
+  POWERPOINT
+  OTHER
 }
