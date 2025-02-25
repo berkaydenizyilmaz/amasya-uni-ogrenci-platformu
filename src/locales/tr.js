@@ -241,4 +241,29 @@ export const tr = {
       }
     }
   },
+  dormitories: {
+    title: "KYK Yurtları",
+    subtitle: "Amasya'daki tüm KYK yurtları hakkında detaylı bilgi",
+    tabs: {
+      all: "Tüm Yurtlar",
+      male: "Erkek Yurtları",
+      female: "Kız Yurtları"
+    },
+    info: {
+      capacity: "Kapasite",
+      occupancy: "Doluluk",
+      location: "Konum",
+      address: "Adres"
+    },
+    occupancyStatus: {
+      full: "% Dolu",
+      available: "Müsait",
+      limited: "Az Yer",
+      unavailable: "Dolu"
+    },
+    types: {
+      male: "ERKEK",
+      female: "KIZ"
+    }
+  },
 }; 

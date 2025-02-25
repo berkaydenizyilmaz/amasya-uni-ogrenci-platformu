@@ -282,5 +282,30 @@ export const en = {
           }
         }
       }
+    },
+    dormitories: {
+      title: "KYK Dormitories",
+      subtitle: "Detailed information about all KYK dormitories in Amasya",
+      tabs: {
+        all: "All Dormitories",
+        male: "Male Dormitories",
+        female: "Female Dormitories"
+      },
+      info: {
+        capacity: "Capacity",
+        occupancy: "Occupancy",
+        location: "Location",
+        address: "Address"
+      },
+      occupancyStatus: {
+        full: "% Full",
+        available: "Available",
+        limited: "Limited Space",
+        unavailable: "Full"
+      },
+      types: {
+        male: "MALE",
+        female: "FEMALE"
+      }
     }
 };
