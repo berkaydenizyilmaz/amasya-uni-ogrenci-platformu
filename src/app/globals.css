@@ -119,3 +119,34 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Swiper Slider Styles */
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #fff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.swiper-pagination-bullet {
+  background: #fff !important;
+  opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+/* Fade efekti için */
+.swiper-fade .swiper-slide {
+  opacity: 0 !important;
+  transition: opacity 0.5s ease;
+}
+
+.swiper-fade .swiper-slide-active {
+  opacity: 1 !important;
+}

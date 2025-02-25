@@ -7,6 +7,46 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { t } from "@/lib/i18n";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, Navigation, EffectFade } from 'swiper/modules';
+
+// Swiper stilleri
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import 'swiper/css/effect-fade';
+
+// Üniversite resimleri
+const universityImages = [
+  {
+    src: '/images/amasya-unversitesi.jpg',
+    alt: 'Amasya Üniversitesi Ana Kampüs'
+  },
+  {
+    src: '/images/kutuphane.jpg',
+    alt: 'Amasya Üniversitesi Kütüphanesi'
+  },
+  {
+    src: '/images/muhendislik-kar.jpg',
+    alt: 'Mühendislik Fakültesi Kış Görünümü'
+  }
+];
+
+// Amasya resimleri
+const amasyaImages = [
+  {
+    src: '/images/amasya-nehir-1.jpg',
+    alt: 'Yeşilırmak Nehri ve Yalıboyu Evleri'
+  },
+  {
+    src: '/images/amasya-nehir-2.jpg',
+    alt: 'Yeşilırmak Nehri Gece Görünümü'
+  },
+  {
+    src: '/images/amasya-mezarlar-1.jpg',
+    alt: 'Amasya Kral Kaya Mezarları'
+  }
+];
 
 /**
  * Ana sayfa bileşeni
@@ -185,14 +225,35 @@ export default function Home() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
-              <Image
-                src="/images/university.jpg"
-                alt={t('home.about.title')}
-                className="object-cover w-full h-full"
-                width={1000}
-                height={1000}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-theme-bg to-transparent" />
+              <Swiper
+                modules={[Autoplay, Pagination, Navigation, EffectFade]}
+                effect="fade"
+                spaceBetween={0}
+                slidesPerView={1}
+                autoplay={{
+                  delay: 5000,
+                  disableOnInteraction: false,
+                }}
+                pagination={{
+                  clickable: true,
+                }}
+                navigation={true}
+                loop={true}
+                className="w-full h-full"
+              >
+                {universityImages.map((image, index) => (
+                  <SwiperSlide key={index}>
+          <Image
+                      src={image.src}
+                      alt={image.alt}
+                      className="object-cover w-full h-full"
+                      width={1000}
+                      height={1000}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <div className="absolute inset-0 bg-gradient-to-t from-theme-bg to-transparent pointer-events-none" />
             </div>
           </div>
         </div>
@@ -237,14 +298,35 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl order-2 md:order-1">
-              <Image
-                src="/images/amasya.jpg"
-                alt={t('home.tourism.title')}
-                className="object-cover w-full h-full"
-                width={1000}
-                height={1000}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-theme-bg to-transparent" />
+              <Swiper
+                modules={[Autoplay, Pagination, Navigation, EffectFade]}
+                effect="fade"
+                spaceBetween={0}
+                slidesPerView={1}
+                autoplay={{
+                  delay: 5000,
+                  disableOnInteraction: false,
+                }}
+                pagination={{
+                  clickable: true,
+                }}
+                navigation={true}
+                loop={true}
+                className="w-full h-full"
+              >
+                {amasyaImages.map((image, index) => (
+                  <SwiperSlide key={index}>
+          <Image
+                      src={image.src}
+                      alt={image.alt}
+                      className="object-cover w-full h-full"
+                      width={1000}
+                      height={1000}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <div className="absolute inset-0 bg-gradient-to-t from-theme-bg to-transparent pointer-events-none" />
             </div>
             <div className="order-1 md:order-2">
               <h2 className="text-3xl font-bold mb-6 text-theme-text">
@@ -291,7 +373,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+    </div>
       </section>
     </main>
   );
