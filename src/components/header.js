@@ -16,6 +16,15 @@ import { Building2, Bus, BookCopy, Calendar, Landmark, MapPin, UtensilsCrossed, 
 import LanguageSwitcher from "@/components/language-switcher";
 import { t } from "@/lib/i18n";
 import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 /**
  * Ana sayfa header bileşeni
@@ -23,6 +32,7 @@ import { useEffect, useState } from "react";
  */
 export default function Header() {
   const [mounted, setMounted] = useState(false);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     setMounted(true);
@@ -44,12 +54,12 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex md:items-center md:space-x-8">
             <NavigationMenu>
-              <NavigationMenuList className="flex items-center gap-1">
+              <NavigationMenuList className="flex items-center gap-4">
                 {/* Üniversitemiz */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                  <NavigationMenuTrigger className="h-10 px-5 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
                     <Building2 className="w-4 h-4 mr-2" />
                     {t('common.menu.university')}
                   </NavigationMenuTrigger>
@@ -97,7 +107,7 @@ export default function Header() {
 
                 {/* Yurt ve Ulaşım */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                  <NavigationMenuTrigger className="h-10 px-5 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
                     <Bus className="w-4 h-4 mr-2" />
                     {t('common.menu.dormitory')}
                   </NavigationMenuTrigger>
@@ -145,7 +155,7 @@ export default function Header() {
 
                 {/* Amasyamız */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
+                  <NavigationMenuTrigger className="h-10 px-5 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
                     <Landmark className="w-4 h-4 mr-2" />
                     {t('common.menu.amasya')}
                   </NavigationMenuTrigger>
@@ -193,7 +203,7 @@ export default function Header() {
 
                 {/* Not Paylaşımı */}
                 <NavigationMenuItem>
-                  <Link href="/not-paylasimi" className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-theme-primary px-4 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                  <Link href="/not-paylasimi" className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-theme-primary px-5 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
                     <BookCopy className="w-4 h-4 mr-2" />
                     {t('common.menu.notes')}
                   </Link>
@@ -201,18 +211,71 @@ export default function Header() {
 
                 {/* Etkinlikler */}
                 <NavigationMenuItem>
-                  <Link href="/etkinlikler" className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-theme-primary px-4 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                  <Link href="/etkinlikler" className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-theme-primary px-5 py-2 text-sm font-medium text-theme-bg transition-colors hover:bg-theme-primary-hover hover:text-theme-bg focus:bg-theme-primary-hover focus:text-theme-bg focus:outline-none disabled:pointer-events-none disabled:opacity-50">
                     <Calendar className="w-4 h-4 mr-2" />
                     {t('common.menu.events')}
                   </Link>
                 </NavigationMenuItem>
-
-                
               </NavigationMenuList>
 
               <NavigationMenuViewport className="absolute top-[100%] left-0 w-full origin-top-center overflow-hidden rounded-md border border-theme-primary/20 bg-theme-bg text-theme-text shadow-lg animate-in data-[motion=from-start]:animate-in data-[motion=from-end]:animate-out data-[motion=to-end]:animate-in" />
             </NavigationMenu>
-            <LanguageSwitcher />
+
+            <div className="flex items-center gap-6">
+              <LanguageSwitcher />
+              
+              {status === 'authenticated' ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={session.user.image} alt={session.user.name} />
+                        <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex items-center justify-start gap-2 p-2">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        {session.user.name && (
+                          <p className="font-medium text-theme-text">{session.user.name}</p>
+                        )}
+                        {session.user.email && (
+                          <p className="w-[200px] truncate text-sm text-theme-text-muted">
+                            {session.user.email}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profil">Profil</Link>
+                    </DropdownMenuItem>
+                    {session.user.role === 'ADMIN' && (
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin">Yönetim Paneli</Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="text-red-500 focus:text-red-500"
+                      onSelect={() => signOut()}
+                    >
+                      Çıkış Yap
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" asChild>
+                    <Link href="/giris">Giriş Yap</Link>
+                  </Button>
+                  <Button className="bg-theme-primary hover:bg-theme-primary-hover text-white" asChild>
+                    <Link href="/kayit">Kayıt Ol</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu */}
@@ -266,6 +329,51 @@ export default function Header() {
                 <div className="pt-4">
                   <LanguageSwitcher />
                 </div>
+                {status === 'authenticated' ? (
+                  <div className="space-y-4 pt-4 border-t border-theme-primary/20">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={session.user.image} alt={session.user.name} />
+                        <AvatarFallback>{session.user.name?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-theme-text">{session.user.name}</span>
+                        <span className="text-xs text-theme-text-muted">{session.user.email}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Link 
+                        href="/profil"
+                        className="block text-sm text-theme-text hover:text-theme-primary-hover"
+                      >
+                        Profil
+                      </Link>
+                      {session.user.role === 'ADMIN' && (
+                        <Link 
+                          href="/admin"
+                          className="block text-sm text-theme-text hover:text-theme-primary-hover"
+                        >
+                          Yönetim Paneli
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => signOut()}
+                        className="block w-full text-left text-sm text-red-500 hover:text-red-600"
+                      >
+                        Çıkış Yap
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2 pt-4 border-t border-theme-primary/20">
+                    <Button variant="ghost" className="w-full justify-start" asChild>
+                      <Link href="/giris">Giriş Yap</Link>
+                    </Button>
+                    <Button className="w-full justify-start bg-theme-primary hover:bg-theme-primary-hover text-white" asChild>
+                      <Link href="/kayit">Kayıt Ol</Link>
+                    </Button>
+                  </div>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
