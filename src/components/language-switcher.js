@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { languages, defaultLanguage, changeLanguage } from "@/lib/i18n";
+import { languages, defaultLanguage } from "@/lib/i18n";
 
 /**
  * Dil değiştirme bileşeni
@@ -30,13 +30,13 @@ export default function LanguageSwitcher() {
 
   return (
     <Select value={currentLang} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-[100px] bg-transparent border-theme-primary/20">
-        <SelectValue />
+      <SelectTrigger className="w-[60px] bg-transparent border-theme-primary/20 px-2">
+        <SelectValue placeholder={currentLang.toUpperCase()} />
       </SelectTrigger>
       <SelectContent>
-        {Object.entries(languages).map(([code, lang]) => (
-          <SelectItem key={code} value={code}>
-            {lang.name}
+        {Object.entries(languages).map(([code]) => (
+          <SelectItem key={code} value={code} className="px-2">
+            {code.toUpperCase()}
           </SelectItem>
         ))}
       </SelectContent>

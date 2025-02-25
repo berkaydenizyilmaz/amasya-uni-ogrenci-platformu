@@ -40,12 +40,12 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/universite/genel-bilgi">
-              <Button size="lg" variant="default" className="bg-theme-bg text-theme-primary hover:bg-theme-bg/90">
+              <Button size="lg" variant="default" className="bg-theme-bg text-theme-primary hover:bg-theme-bg/90 border border-theme-bg">
                 {t('common.buttons.explore')}
               </Button>
             </Link>
             <Link href="/not-paylasimi">
-              <Button size="lg" variant="outline" className="text-theme-bg border-theme-bg hover:bg-theme-bg/10">
+              <Button size="lg" variant="default" className="bg-theme-primary text-theme-bg hover:bg-theme-primary-hover">
                 {t('common.buttons.startSharing')}
               </Button>
             </Link>
@@ -148,10 +148,8 @@ export default function Home() {
                 <p className="text-theme-text-muted">{t('home.features.events.description')}</p>
               </CardContent>
               <CardFooter>
-                <Link href="/etkinlikler" className="w-full">
-                  <Button variant="outline" className="w-full group-hover:bg-theme-primary group-hover:text-theme-bg border-theme-primary text-theme-primary transition-colors">
-                    {t('common.buttons.moreInfo')}
-                  </Button>
+                <Link href="/etkinlikler" className="w-full group-hover:bg-theme-primary group-hover:text-theme-bg border-theme-primary text-theme-primary transition-colors">
+                  {t('common.buttons.moreInfo')}
                 </Link>
               </CardFooter>
             </Card>
@@ -195,6 +193,102 @@ export default function Home() {
                 height={1000}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-theme-bg to-transparent" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Yapay Zeka Özellikleri */}
+      <section className="py-24 bg-theme-bg/50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-4 text-theme-text">
+            {t('home.ai.title')}
+          </h2>
+          <p className="text-theme-text-muted text-center mb-12 max-w-2xl mx-auto">
+            {t('home.ai.subtitle')}
+          </p>
+          <div className="max-w-xl mx-auto">
+            <Card className="group hover:shadow-lg transition-all border-theme-primary/20 bg-theme-bg hover:border-theme-primary">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-theme-text">
+                  <svg className="h-6 w-6 text-theme-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {t('home.ai.guide.title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-theme-text-muted">{t('home.ai.guide.description')}</p>
+              </CardContent>
+              <CardFooter>
+                <Link href="/amasya/chatbot" className="w-full">
+                  <Button variant="outline" className="w-full group-hover:bg-theme-primary group-hover:text-theme-bg border-theme-primary text-theme-primary transition-colors">
+                    {t('home.ai.guide.button')}
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Turistik Rehber */}
+      <section className="py-24 bg-theme-bg">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl order-2 md:order-1">
+              <Image
+                src="/images/amasya.jpg"
+                alt={t('home.tourism.title')}
+                className="object-cover w-full h-full"
+                width={1000}
+                height={1000}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-theme-bg to-transparent" />
+            </div>
+            <div className="order-1 md:order-2">
+              <h2 className="text-3xl font-bold mb-6 text-theme-text">
+                {t('home.tourism.title')}
+              </h2>
+              <p className="text-theme-text-muted mb-4">
+                {t('home.tourism.description1')}
+              </p>
+              <p className="text-theme-text-muted mb-6">
+                {t('home.tourism.description2')}
+              </p>
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="flex items-center gap-2 text-theme-text">
+                  <svg className="h-5 w-5 text-theme-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {t('home.tourism.features.locations')}
+                </div>
+                <div className="flex items-center gap-2 text-theme-text">
+                  <svg className="h-5 w-5 text-theme-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                  {t('home.tourism.features.routes')}
+                </div>
+                <div className="flex items-center gap-2 text-theme-text">
+                  <svg className="h-5 w-5 text-theme-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                  </svg>
+                  {t('home.tourism.features.cuisine')}
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <Link href="/amasya/tarihi-yerler">
+                  <Button size="lg" className="bg-theme-primary text-theme-bg hover:bg-theme-primary-hover">
+                    {t('home.tourism.buttons.explore')}
+                  </Button>
+                </Link>
+                <Link href="/amasya/gezi-rotalari">
+                  <Button size="lg" variant="outline" className="text-theme-primary border-theme-primary hover:bg-theme-primary hover:text-theme-bg">
+                    {t('home.tourism.buttons.routes')}
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

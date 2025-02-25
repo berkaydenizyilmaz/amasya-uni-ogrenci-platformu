@@ -61,5 +61,29 @@ export const en = {
         description1: "Established in 2006, Amasya University provides quality education with its deep-rooted history and modern educational approach.",
         description2: "It has a wide academic structure with 11 Faculties, 3 Institutes, 1 School and 7 Vocational Schools.",
       },
-    },
-  };
+      ai: {
+        title: "Amasya Guide Chatbot",
+        subtitle: "Ask our AI assistant anything you want to know about Amasya",
+        guide: {
+          title: "Amasya Guide",
+          description: "Get instant information about historical places, points of interest, local cuisine and more",
+          button: "Ask Guide"
+        }
+      },
+      tourism: {
+        title: "Discover Amasya",
+        description1: "Explore Amasya with its thousands of years of history, unique architecture, and natural beauty.",
+        description2: "Detailed information about places to visit, local cuisine, and accommodation options in Amasya, the city of princes.",
+        features: {
+          locations: "Historical Places",
+          routes: "Tour Routes",
+          cuisine: "Local Cuisine",
+          accommodation: "Accommodation"
+        },
+        buttons: {
+          explore: "Explore Historical Places",
+          routes: "View Tour Routes"
+        }
+      }
+    }
+};
