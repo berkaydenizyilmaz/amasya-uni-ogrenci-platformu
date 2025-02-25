@@ -20,9 +20,10 @@ const validateComment = (data) => {
  */
 export async function GET(request, { params }) {
   try {
+    const resolvedParams = await Promise.resolve(params);
     const comments = await prisma.comment.findMany({
       where: {
-        postId: params.id,
+        postId: resolvedParams.id,
       },
       orderBy: {
         createdAt: "desc",
@@ -31,6 +32,7 @@ export async function GET(request, { params }) {
         author: {
           select: {
             name: true,
+            email: true,
           },
         },
       },
@@ -55,6 +57,7 @@ export async function GET(request, { params }) {
 export async function POST(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
+    const resolvedParams = await Promise.resolve(params);
 
     if (!session?.user?.email) {
       return NextResponse.json(
@@ -85,12 +88,13 @@ export async function POST(request, { params }) {
         data: {
           content: validatedData.content,
           authorId: user.id,
-          postId: params.id,
+          postId: resolvedParams.id,
         },
         include: {
           author: {
             select: {
               name: true,
+              email: true,
             },
           },
         },

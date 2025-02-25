@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/header";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { FileText, MessageCircle, Trash2, Download } from "lucide-react";
+import { FileText, MessageCircle, Trash2, Download, Loader2, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import {
   AlertDialog,
@@ -31,9 +31,10 @@ export default function PostDetailPage({ params }) {
   const [error, setError] = useState("");
   const [commentContent, setCommentContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [commentsLoading, setCommentsLoading] = useState(true);
   const resolvedParams = use(params);
 
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const response = await fetch(`/api/posts/${resolvedParams.id}`);
       const data = await response.json();
@@ -48,9 +49,9 @@ export default function PostDetailPage({ params }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [resolvedParams.id]);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await fetch(`/api/posts/${resolvedParams.id}/comments`);
       const data = await response.json();
@@ -62,8 +63,10 @@ export default function PostDetailPage({ params }) {
       setComments(data);
     } catch (error) {
       console.error("Comments fetch error:", error);
+    } finally {
+      setCommentsLoading(false);
     }
-  };
+  }, [resolvedParams.id]);
 
   const handleDelete = async () => {
     if (!session || session.user.email !== post.author.email) {
@@ -126,10 +129,30 @@ export default function PostDetailPage({ params }) {
     }
   };
 
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const response = await fetch(`/api/posts/${params.id}/comments/${commentId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || "Yorum silinirken bir hata oluştu");
+        return;
+      }
+
+      // Yorumları yenile
+      fetchComments();
+    } catch (error) {
+      console.error("Comment delete error:", error);
+      setError("Yorum silinirken bir hata oluştu");
+    }
+  };
+
   useEffect(() => {
     fetchPost();
     fetchComments();
-  }, [resolvedParams.id]);
+  }, [fetchPost, fetchComments]);
 
   if (loading) {
     return (
@@ -278,7 +301,7 @@ export default function PostDetailPage({ params }) {
         <div className="space-y-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <MessageCircle className="w-5 h-5" />
-            Yorumlar ({comments.length})
+            Yorumlar {!commentsLoading && `(${comments.length})`}
           </h2>
 
           {error && (
@@ -303,36 +326,63 @@ export default function PostDetailPage({ params }) {
             </Button>
           </form>
 
-          <div className="space-y-4">
-            {comments.map((comment) => (
-              <Card key={comment.id}>
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarFallback>
-                        {comment.author.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium">
-                          {comment.author.name}
-                        </span>
-                        <span className="text-sm text-theme-text-muted">
-                          {new Date(comment.createdAt).toLocaleDateString('tr-TR')}
-                        </span>
-                      </div>
-                      <p className="text-theme-text">{comment.content}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-
-            {comments.length === 0 && (
-              <div className="text-center text-theme-text-muted py-4">
-                Henüz yorum yapılmamış
+          <div className="space-y-4 mt-6">
+            {commentsLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="flex items-center gap-2 text-theme-text-muted">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Yorumlar yükleniyor...</span>
+                </div>
               </div>
+            ) : comments.length === 0 ? (
+              <div className="text-center py-8 bg-theme-bg-secondary rounded-lg border border-theme-primary/10">
+                <MessageSquare className="w-12 h-12 mx-auto text-theme-text-muted mb-2 opacity-50" />
+                <p className="text-theme-text-muted">İlk yorumu siz yapın</p>
+              </div>
+            ) : (
+              comments.map((comment) => (
+                <div key={comment.id} className="bg-white p-4 rounded-lg shadow-sm border border-theme-primary/10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{comment.author.name}</span>
+                      <span className="text-sm text-theme-text-muted">
+                        {new Date(comment.createdAt).toLocaleDateString('tr-TR')}
+                      </span>
+                    </div>
+                    {session?.user?.email === comment.author.email && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Yorumu Silmek İstediğinize Emin Misiniz?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Bu işlem geri alınamaz.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleCommentDelete(comment.id)}
+                              className="bg-red-500 hover:bg-red-600"
+                            >
+                              Sil
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
+                  </div>
+                  <p className="mt-2 text-theme-text">{comment.content}</p>
+                </div>
+              ))
             )}
           </div>
         </div>
