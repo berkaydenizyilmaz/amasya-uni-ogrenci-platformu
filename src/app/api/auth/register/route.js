@@ -43,16 +43,17 @@ export async function POST(request) {
         name,
         email,
         password: hashedPassword,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
       },
     });
 
-    return NextResponse.json({
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+    return NextResponse.json({ user });
   } catch (error) {
     console.error("Kayıt hatası:", error);
     return NextResponse.json(

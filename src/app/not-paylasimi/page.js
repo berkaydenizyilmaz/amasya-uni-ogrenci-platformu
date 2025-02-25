@@ -10,9 +10,100 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { PlusCircle, MessageCircle, Calendar, FileText, X, Heart, Share2, Bookmark } from "lucide-react";
+import { PlusCircle, MessageCircle, Calendar, FileText, X, Bookmark, BookmarkCheck, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { t } from "@/lib/i18n";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+const FACULTIES = {
+  "Eğitim Fakültesi": [
+    "Matematik ve Fen Bilimleri Eğitimi",
+    "Temel Eğitim",
+    "Türkçe ve Sosyal Bilimler Eğitimi",
+    "Özel Eğitim",
+    "Eğitim Bilimleri",
+    "Yabancı Dil Eğitimi"
+  ],
+  "Fen Edebiyat Fakültesi": [
+    "Matematik",
+    "Fizik",
+    "Kimya",
+    "Biyoloji",
+    "Türk Dili ve Edebiyatı",
+    "Tarih",
+    "Coğrafya"
+  ],
+  "Mühendislik Fakültesi": [
+    "Bilgisayar Mühendisliği",
+    "Elektrik-Elektronik Mühendisliği",
+    "İnşaat Mühendisliği",
+    "Makine Mühendisliği"
+  ],
+  "İktisadi ve İdari Bilimler Fakültesi": [
+    "İşletme",
+    "İktisat",
+    "Siyaset Bilimi ve Kamu Yönetimi",
+    "Uluslararası İlişkiler"
+  ],
+  "Sağlık Bilimleri Fakültesi": [
+    "Hemşirelik",
+    "Ebelik",
+    "Beslenme ve Diyetetik",
+    "Fizyoterapi ve Rehabilitasyon"
+  ],
+  "Mimarlık Fakültesi": [
+    "Mimarlık",
+    "Şehir ve Bölge Planlama"
+  ],
+  "Tıp Fakültesi": [
+    "Tıp"
+  ],
+  "İlahiyat Fakültesi": [
+    "İlahiyat"
+  ],
+  "Güzel Sanatlar Fakültesi": [
+    "Geleneksel Türk Sanatları",
+    "Resim",
+    "Grafik Tasarım"
+  ]
+};
+
+const DEPARTMENTS = {
+  education: [
+    "Matematik ve Fen Bilimleri Eğitimi",
+    "Temel Eğitim",
+    "Türkçe ve Sosyal Bilimler Eğitimi",
+    "Özel Eğitim",
+    "Eğitim Bilimleri",
+    "Yabancı Dil Eğitimi"
+  ],
+  arts: [
+    "Matematik",
+    "Fizik",
+    "Kimya",
+    "Biyoloji",
+    "Türk Dili ve Edebiyatı",
+    "Tarih",
+    "Coğrafya"
+  ],
+  engineering: [
+    "Bilgisayar Mühendisliği",
+    "Elektrik-Elektronik Mühendisliği",
+    "İnşaat Mühendisliği",
+    "Makine Mühendisliği"
+  ],
+  // ... Diğer bölümler eklenecek
+};
 
 /**
  * Not paylaşım ana sayfası
@@ -22,11 +113,23 @@ export default function NotesPage() {
   const { data: session, status } = useSession();
   const [mounted, setMounted] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fileError, setFileError] = useState("");
+  const [showBookmarked, setShowBookmarked] = useState(false);
+  const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
+  const [filters, setFilters] = useState({
+    faculty: "",
+    department: "",
+    category: "",
+    search: ""
+  });
+  const [availableDepartments, setAvailableDepartments] = useState([]);
+  const [selectedFaculty, setSelectedFaculty] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("DERS_NOTU");
 
   const fetchPosts = async () => {
     try {
@@ -46,6 +149,43 @@ export default function NotesPage() {
       setError("Notlar yüklenirken bir hata oluştu");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchBookmarkedPosts = async () => {
+    try {
+      const response = await fetch("/api/bookmarks");
+      const data = await response.json();
+      if (response.ok) {
+        setBookmarkedPosts(data.map(bookmark => bookmark.postId));
+      }
+    } catch (error) {
+      console.error("Error fetching bookmarks:", error);
+    }
+  };
+
+  const handleBookmark = async (postId) => {
+    if (!session) {
+      setError("Kaydetmek için giriş yapmalısınız");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/bookmarks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postId }),
+      });
+
+      if (response.ok) {
+        fetchBookmarkedPosts();
+      } else {
+        throw new Error("Kaydetme işlemi başarısız");
+      }
+    } catch (error) {
+      setError(error.message);
     }
   };
 
@@ -83,18 +223,46 @@ export default function NotesPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
 
+    const title = e.target.title.value;
+    const content = e.target.content.value;
+
+    // Fakülte ve bölüm kontrolü
+    if (!selectedFaculty) {
+      setError("Lütfen bir fakülte seçin");
+      setLoading(false);
+      return;
+    }
+
+    if (!selectedDepartment) {
+      setError("Lütfen bir bölüm seçin");
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("title", e.target.title.value);
-    formData.append("content", e.target.content.value);
-    formData.append("category", e.target.category.value);
-    
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("category", selectedCategory);
+    formData.append("faculty", selectedFaculty);
+    formData.append("department", selectedDepartment);
+
+    // Dosyaları ekle
     selectedFiles.forEach((file) => {
       formData.append("files", file);
     });
 
     try {
+      console.log("Form data:", {
+        title,
+        content,
+        category: selectedCategory,
+        faculty: selectedFaculty,
+        department: selectedDepartment
+      });
+
       const response = await fetch("/api/posts", {
         method: "POST",
         body: formData,
@@ -106,21 +274,90 @@ export default function NotesPage() {
         throw new Error(data.error || "Not paylaşılırken bir hata oluştu");
       }
 
-      console.log("API Response:", data);
-
+      // Başarılı
       setIsDialogOpen(false);
       setSelectedFiles([]);
-      fetchPosts();
+      setSelectedFaculty("");
+      setSelectedDepartment("");
+      setAvailableDepartments([]);
+      e.target.reset();
+      await fetchPosts();
     } catch (error) {
-      console.error("Post error:", error);
-      setError(error.message);
+      console.error("Form submission error:", error);
+      setError(error.message || "Not paylaşılırken bir hata oluştu");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleFacultyChange = (value) => {
+    setSelectedFaculty(value);
+    setSelectedDepartment("");
+    setAvailableDepartments(FACULTIES[value] || []);
+  };
+
+  const handleDepartmentChange = (value) => {
+    setSelectedDepartment(value);
+    setFilters(prev => ({ ...prev, department: value }));
+  };
+
+  const handleDelete = async (postId) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || "Not silinirken bir hata oluştu");
+        return;
+      }
+
+      setError("");
+      fetchPosts(); // Notları yenile
+      fetchBookmarkedPosts(); // Kaydedilen notları yenile
+    } catch (error) {
+      console.error("Delete error:", error);
+      setError("Not silinirken bir hata oluştu");
+    }
+  };
+
+  const filteredPosts = posts.filter(post => {
+    if (showBookmarked && !bookmarkedPosts.includes(post.id)) return false;
+    
+    if (filters.faculty && post.faculty !== filters.faculty) return false;
+    if (filters.department && post.department !== filters.department) return false;
+    if (filters.category && post.category !== filters.category) return false;
+    
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      return (
+        post.title.toLowerCase().includes(searchLower) ||
+        post.content.toLowerCase().includes(searchLower) ||
+        post.author.name.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    return true;
+  });
 
   useEffect(() => {
     setMounted(true);
     fetchPosts();
-  }, []);
+    if (session) {
+      fetchBookmarkedPosts();
+    }
+  }, [session]);
+
+  const getCategoryLabel = (category) => {
+    const categories = {
+      DERS_NOTU: "Ders Notu",
+      SINAV_NOTU: "Sınav Notu",
+      OZET: "Özet",
+      KAYNAK: "Kaynak"
+    };
+    return categories[category] || category;
+  };
 
   if (!mounted) {
     return null;
@@ -130,213 +367,374 @@ export default function NotesPage() {
     <main className="min-h-screen bg-theme-bg">
       <Header />
       
-      {/* Ana İçerik */}
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          {/* Not Paylaş Kartı */}
-          {session ? (
-            <Card className="mb-8 border-theme-primary/10 bg-white">
-              <CardContent className="p-4">
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <div className="flex items-center gap-4 cursor-pointer">
-                      <Avatar className="w-10 h-10">
-                        <AvatarFallback>
-                          {session.user.name?.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 p-3 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <span className="text-theme-text-muted">Not paylaşmak için tıkla...</span>
-                      </div>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Yeni Not Paylaş</DialogTitle>
-                    </DialogHeader>
-                    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-                      <div className="space-y-2">
-                        <Input
-                          id="title"
-                          name="title"
-                          required
-                          placeholder="Not başlığı"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Select name="category" required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Kategori seçin" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="DERS_NOTU">Ders Notu</SelectItem>
-                            <SelectItem value="SINAV_NOTU">Sınav Notu</SelectItem>
-                            <SelectItem value="OZET">Özet</SelectItem>
-                            <SelectItem value="KAYNAK">Kaynak</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Textarea
-                          id="content"
-                          name="content"
-                          required
-                          placeholder="Not içeriği"
-                          rows={5}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="border-2 border-dashed border-theme-primary/20 rounded-lg p-4">
-                          <Input
-                            type="file"
-                            onChange={handleFileChange}
-                            multiple
-                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
-                            className="mb-2"
-                          />
-                          <p className="text-xs text-theme-text-muted">
-                            Desteklenen formatlar: PDF, Word, Excel, PowerPoint, JPEG, PNG (max: 10MB)
-                          </p>
-                          {fileError && (
-                            <p className="text-red-500 text-sm mt-1">{fileError}</p>
-                          )}
-                          {selectedFiles.length > 0 && (
-                            <div className="mt-4 space-y-2">
-                              {selectedFiles.map((file, index) => (
-                                <div key={index} className="flex items-center justify-between bg-theme-primary/5 rounded p-2">
-                                  <div className="flex items-center gap-2">
-                                    <FileText className="w-4 h-4" />
-                                    <span className="text-sm truncate">{file.name}</span>
-                                  </div>
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => removeFile(index)}
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      {error && (
-                        <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">
-                          {error}
-                        </div>
-                      )}
-                      <div className="flex justify-end">
-                        <Button type="submit">Paylaş</Button>
-                      </div>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="mb-8 border-theme-primary/10 bg-white">
-              <CardContent className="p-6 text-center">
-                <p className="text-theme-text-muted mb-4">
-                  Not paylaşmak için giriş yapmalısınız
-                </p>
-                <Button asChild variant="default">
-                  <Link href="/giris">Giriş Yap</Link>
-                </Button>
-              </CardContent>
-            </Card>
+        {/* Filtreleme Alanı */}
+        <div className="mb-8 space-y-4">
+          {error && (
+            <div className="bg-red-50 text-red-500 p-3 rounded-lg mb-4">
+              {error}
+            </div>
           )}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Select value={filters.faculty} onValueChange={handleFacultyChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Fakülte seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.keys(FACULTIES).map((faculty) => (
+                  <SelectItem key={faculty} value={faculty}>
+                    {faculty}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          {/* Notlar Listesi */}
-          {loading ? (
-            <div className="text-center text-theme-text-muted">Yükleniyor...</div>
-          ) : error ? (
-            <div className="text-center text-red-500">{error}</div>
-          ) : posts.length === 0 ? (
-            <div className="text-center text-theme-text-muted">Henüz paylaşılan not bulunmuyor</div>
-          ) : (
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <Card key={post.id} className="border-theme-primary/10 bg-white hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    {/* Kullanıcı Bilgisi */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10">
-                          <AvatarFallback>
-                            {post.author.name?.charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium text-theme-text">{post.author.name}</p>
-                          <p className="text-sm text-theme-text-muted">
-                            {new Date(post.createdAt).toLocaleDateString('tr-TR')}
-                          </p>
-                        </div>
-                      </div>
-                      <Button variant="ghost" size="icon">
-                        <Share2 className="w-5 h-5 text-theme-text-muted" />
-                      </Button>
+            <Select 
+              value={filters.department} 
+              onValueChange={handleDepartmentChange}
+              disabled={!filters.faculty}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Bölüm seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableDepartments.map(dept => (
+                  <SelectItem key={dept} value={dept}>
+                    {dept}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select 
+              value={filters.category} 
+              onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Kategori seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="DERS_NOTU">Ders Notu</SelectItem>
+                <SelectItem value="SINAV_NOTU">Sınav Notu</SelectItem>
+                <SelectItem value="OZET">Özet</SelectItem>
+                <SelectItem value="KAYNAK">Kaynak</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Input
+              placeholder="Ara..."
+              value={filters.search}
+              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+            />
+          </div>
+
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Button
+                variant={showBookmarked ? "default" : "outline"}
+                onClick={() => setShowBookmarked(!showBookmarked)}
+                className="flex items-center gap-2"
+              >
+                {showBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+                {showBookmarked ? "Tüm Notlar" : "Kaydedilenler"}
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setFilters({
+                    faculty: "",
+                    department: "",
+                    category: "",
+                    search: ""
+                  });
+                  setAvailableDepartments([]);
+                  setShowBookmarked(false);
+                }}
+                className="flex items-center gap-2"
+              >
+                <X className="w-4 h-4" />
+                Filtreleri Temizle
+              </Button>
+            </div>
+
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-theme-primary hover:bg-theme-primary-hover text-white flex items-center gap-2">
+                  <PlusCircle className="w-4 h-4" />
+                  Not Paylaş
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Not Paylaş</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <label htmlFor="title" className="text-sm font-medium">
+                      Başlık
+                    </label>
+                    <Input
+                      id="title"
+                      name="title"
+                      required
+                      placeholder="Not başlığı"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="faculty" className="text-sm font-medium">
+                        Fakülte
+                      </label>
+                      <Select 
+                        value={selectedFaculty}
+                        onValueChange={(value) => {
+                          setSelectedFaculty(value);
+                          setSelectedDepartment("");
+                          setAvailableDepartments(FACULTIES[value] || []);
+                        }}
+                        required
+                      >
+                        <SelectTrigger id="faculty">
+                          <SelectValue placeholder="Fakülte seçin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.keys(FACULTIES).map((faculty) => (
+                            <SelectItem key={faculty} value={faculty}>
+                              {faculty}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
-                    {/* İçerik */}
-                    <Link href={`/not-paylasimi/${post.id}`}>
-                      <div className="space-y-2 mb-4">
-                        <h3 className="text-lg font-semibold text-theme-text hover:text-theme-primary transition-colors">
-                          {post.title}
-                        </h3>
-                        <p className="text-theme-text-muted line-clamp-3">
-                          {post.content}
-                        </p>
-                      </div>
-                    </Link>
+                    <div className="space-y-2">
+                      <label htmlFor="department" className="text-sm font-medium">
+                        Bölüm
+                      </label>
+                      <Select 
+                        value={selectedDepartment}
+                        onValueChange={(value) => {
+                          setSelectedDepartment(value);
+                        }}
+                        disabled={!selectedFaculty}
+                        required
+                      >
+                        <SelectTrigger id="department">
+                          <SelectValue placeholder="Bölüm seçin" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {availableDepartments.map((department) => (
+                            <SelectItem key={department} value={department}>
+                              {department}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-                    {/* Dosyalar */}
-                    {post.files.length > 0 && (
-                      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center gap-2 text-sm text-theme-text-muted mb-2">
-                          <FileText className="w-4 h-4" />
-                          <span>{post.files.length} dosya</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          {post.files.slice(0, 2).map((file) => (
-                            <div
-                              key={file.id}
-                              className="flex items-center gap-2 p-2 bg-white rounded border border-gray-100"
-                            >
-                              <FileText className="w-4 h-4 text-theme-primary" />
-                              <span className="text-sm truncate">{file.name}</span>
+                  <div className="space-y-2">
+                    <label htmlFor="category" className="text-sm font-medium">
+                      Kategori
+                    </label>
+                    <Select 
+                      value={selectedCategory}
+                      onValueChange={setSelectedCategory}
+                      required
+                    >
+                      <SelectTrigger id="category">
+                        <SelectValue placeholder="Kategori seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="DERS_NOTU">Ders Notu</SelectItem>
+                        <SelectItem value="SINAV_NOTU">Sınav Notu</SelectItem>
+                        <SelectItem value="OZET">Özet</SelectItem>
+                        <SelectItem value="KAYNAK">Kaynak</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="content" className="text-sm font-medium">
+                      İçerik
+                    </label>
+                    <Textarea
+                      id="content"
+                      name="content"
+                      required
+                      placeholder="Not içeriği"
+                      rows={5}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="border-2 border-dashed border-theme-primary/20 rounded-lg p-4">
+                      <Input
+                        type="file"
+                        onChange={handleFileChange}
+                        multiple
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
+                        className="mb-2"
+                      />
+                      <p className="text-xs text-theme-text-muted">
+                        Desteklenen formatlar: PDF, Word, Excel, PowerPoint, JPEG, PNG (max: 10MB)
+                      </p>
+                      {fileError && (
+                        <p className="text-red-500 text-sm mt-1">{fileError}</p>
+                      )}
+                      {selectedFiles.length > 0 && (
+                        <div className="mt-4 space-y-2">
+                          {selectedFiles.map((file, index) => (
+                            <div key={index} className="flex items-center justify-between bg-theme-primary/5 rounded p-2">
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-4 h-4" />
+                                <span className="text-sm truncate">{file.name}</span>
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeFile(index)}
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
                             </div>
                           ))}
-                          {post.files.length > 2 && (
-                            <div className="text-sm text-theme-primary">
-                              +{post.files.length - 2} daha
-                            </div>
-                          )}
                         </div>
-                      </div>
-                    )}
-
-                    {/* Etkileşim Butonları */}
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <div className="flex items-center gap-6">
-                        <Button variant="ghost" size="sm" className="text-theme-text-muted hover:text-red-500">
-                          <Heart className="w-5 h-5 mr-2" />
-                          <span>Beğen</span>
-                        </Button>
-                        <Button variant="ghost" size="sm" className="text-theme-text-muted hover:text-theme-primary">
-                          <MessageCircle className="w-5 h-5 mr-2" />
-                          <span>{post._count.comments}</span>
-                        </Button>
-                      </div>
-                      <Button variant="ghost" size="sm" className="text-theme-text-muted hover:text-theme-primary">
-                        <Bookmark className="w-5 h-5" />
-                      </Button>
+                      )}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      type="submit"
+                      className="w-full bg-theme-primary hover:bg-theme-primary-hover text-white transition-colors"
+                      disabled={loading}
+                    >
+                      {loading ? "Paylaşılıyor..." : "Paylaş"}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* Notlar Listesi */}
+        <div className="grid grid-cols-1 gap-6">
+          {filteredPosts.map((post) => (
+            <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-all">
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Avatar className="w-6 h-6">
+                        <AvatarFallback>
+                          {post.author.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm text-theme-text-muted">{post.author.name}</span>
+                      <span className="text-sm text-theme-text-muted">•</span>
+                      <span className="text-sm text-theme-text-muted">
+                        {new Date(post.createdAt).toLocaleDateString('tr-TR')}
+                      </span>
+                    </div>
+                    <Link href={`/not-paylasimi/${post.id}`} className="block group">
+                      <h3 className="text-lg font-semibold mb-1 group-hover:text-theme-primary transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="text-sm text-theme-text-muted line-clamp-2 mb-2">
+                        {post.content}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {post.faculty && (
+                          <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded">
+                            {post.faculty}
+                          </span>
+                        )}
+                        {post.department && (
+                          <span className="text-xs px-2 py-1 bg-green-50 text-green-600 rounded">
+                            {post.department}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  </div>
+                  <div className="flex flex-row gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleBookmark(post.id)}
+                      className={`w-8 h-8 p-0 ${bookmarkedPosts.includes(post.id) ? "text-theme-primary" : ""}`}
+                    >
+                      {bookmarkedPosts.includes(post.id) ? (
+                        <BookmarkCheck className="w-3 h-3" />
+                      ) : (
+                        <Bookmark className="w-3 h-3" />
+                      )}
+                    </Button>
+                    {session?.user?.email === post.author.email ? (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            className="hover:bg-red-600 w-8 h-8 p-0"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Notu Silmek İstediğinize Emin Misiniz?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Bu işlem geri alınamaz. Not ve ilgili tüm yorumlar kalıcı olarak silinecektir.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDelete(post.id)}
+                              className="bg-red-500 hover:bg-red-600"
+                            >
+                              Sil
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-theme-primary/10">
+                  <div className="flex items-center gap-4">
+                    <Link
+                      href={`/not-paylasimi/${post.id}`}
+                      className="flex items-center gap-1 text-xs text-theme-text-muted hover:text-theme-primary transition-colors"
+                    >
+                      <MessageCircle className="w-3 h-3" />
+                      {post._count.comments} Yorum
+                    </Link>
+                    {post.files && post.files.length > 0 && (
+                      <span className="flex items-center gap-1 text-xs text-theme-text-muted">
+                        <FileText className="w-3 h-3" />
+                        {post.files.length} Dosya
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs px-2 py-1 bg-theme-primary/10 text-theme-primary rounded">
+                      {getCategoryLabel(post.category)}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          {filteredPosts.length === 0 && (
+            <div className="text-center text-theme-text-muted py-8">
+              {loading ? "Yükleniyor..." : "Henüz not paylaşılmamış"}
             </div>
           )}
         </div>

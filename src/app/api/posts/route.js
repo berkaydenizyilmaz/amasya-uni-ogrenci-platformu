@@ -9,6 +9,8 @@ const postSchema = z.object({
   title: z.string().min(1).max(255),
   content: z.string().min(1),
   category: z.enum(["DERS_NOTU", "SINAV_NOTU", "OZET", "KAYNAK"]),
+  faculty: z.string().optional(),
+  department: z.string().optional(),
 });
 
 /**
@@ -25,6 +27,7 @@ export async function GET() {
         author: {
           select: {
             name: true,
+            email: true,
           },
         },
         files: {
@@ -101,6 +104,8 @@ export async function POST(request) {
     const title = formData.get("title");
     const content = formData.get("content");
     const category = formData.get("category");
+    const faculty = formData.get("faculty");
+    const department = formData.get("department");
     const files = formData.getAll("files");
 
     // Verileri doğrula
@@ -108,6 +113,8 @@ export async function POST(request) {
       title,
       content,
       category,
+      faculty,
+      department,
     });
 
     // Dosyaları yükle ve veritabanına kaydet
@@ -149,6 +156,8 @@ export async function POST(request) {
         title: validatedData.title,
         content: validatedData.content,
         category: validatedData.category,
+        faculty: validatedData.faculty,
+        department: validatedData.department,
         author: {
           connect: {
             id: user.id

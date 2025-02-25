@@ -35,4 +35,18 @@ export async function uploadToCloudinary(buffer, folder = 'uploads') {
     console.error('Cloudinary upload error:', error);
     throw error;
   }
+}
+
+/**
+ * Cloudinary'den dosya siler
+ * @param {string} publicId - Silinecek dosyanın public ID'si
+ * @returns {Promise<Object>} Silme işlemi sonucu
+ */
+export async function deleteFromCloudinary(publicId) {
+  try {
+    return await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error('Cloudinary delete error:', error);
+    throw error;
+  }
 } 
