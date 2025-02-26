@@ -32,7 +32,7 @@ export default function Dormitories() {
         capacity: 1390,
         occupancy: 1385,
         address: "KOZA MAH.ŞEHİT ALİ BİLGİÇ CAD.CİHANGİR SK.NO:79/1 MERKEZ / AMASYA",
-        image: "/images/yurtlar/sultan-bayezid.jpg",
+        image: "/yurtlar/sultan-bayezid-yurdu-1.jpg",
         location: "Merkez"
       },
       {
@@ -41,7 +41,7 @@ export default function Dormitories() {
         capacity: 266,
         occupancy: 266,
         address: "AKBİLEK MAH.KANDİL SK.NO:4 MERKEZ / AMASYA",
-        image: "/images/yurtlar/amasya-yurdu.jpg",
+        image: "/yurtlar/amasya-yurdu.jpg",
         location: "Merkez"
       },
       {
@@ -50,7 +50,7 @@ export default function Dormitories() {
         capacity: 420,
         occupancy: 292,
         address: "YUNUS EMRE MAH.FAKÜLTE SK.NO:2 MERZİFON / AMASYA",
-        image: "/images/yurtlar/kara-mustafa-pasa.jpg",
+        image: "/yurtlar/kyk-kara-mustafa-pasa-ogrenci-yurdu-42-1.jpg",
         location: "Merzifon"
       },
       {
@@ -59,7 +59,7 @@ export default function Dormitories() {
         capacity: 150,
         occupancy: 39,
         address: "ARTIKABAT MAH.CUMHURİYET CAD. NO:116 GÜMÜŞHACIKÖY / AMASYA",
-        image: "/images/yurtlar/gumushacikoy.jpg",
+        image: "/yurtlar/gumushacikoy.jpeg",
         location: "Gümüşhacıköy"
       }
     ],
@@ -70,7 +70,7 @@ export default function Dormitories() {
         capacity: 3110,
         occupancy: 2777,
         address: "ŞEYHCUİ MAH.FIRAT YILMAZ ÇAKIROĞLU CAD.NO:74 MERKEZ / AMASYA",
-        image: "/images/yurtlar/yesilirmak.jpg",
+        image: "/yurtlar/amasya-yesilirmak-yurdu-1.jpg",
         location: "Merkez"
       },
       {
@@ -79,7 +79,7 @@ export default function Dormitories() {
         capacity: 1065,
         occupancy: 1045,
         address: "ŞEYHCUİ MAH.GÖKHAN SK.NO:11 MERKEZ / AMASYA",
-        image: "/images/yurtlar/husnusah-hatun.jpg",
+        image: "/yurtlar/husnusah-hatun-yurdu-2.jpg",
         location: "Merkez"
       },
       {
@@ -88,7 +88,7 @@ export default function Dormitories() {
         capacity: 310,
         occupancy: 310,
         address: "CAMİCEDİT MAH.ATATÜRK BULV.NO:1 MERZİFON / AMASYA",
-        image: "/images/yurtlar/merzifon.jpg",
+        image: "/yurtlar/merzifon-yurdu-1.jpg",
         location: "Merzifon"
       },
       {
@@ -97,7 +97,7 @@ export default function Dormitories() {
         capacity: 75,
         occupancy: 75,
         address: "YENİ MAH.GİZLİ SK.NO:11 SULUOVA / AMASYA",
-        image: "/images/yurtlar/suluova.jpg",
+        image: "/yurtlar/suluova.jpg",
         location: "Suluova"
       }
     ]
