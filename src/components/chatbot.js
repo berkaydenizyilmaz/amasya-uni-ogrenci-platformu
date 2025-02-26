@@ -177,7 +177,7 @@ export default function Chatbot() {
   }
 
   return (
-    <Card className="fixed bottom-4 right-4 w-96 h-[600px] shadow-xl flex flex-col bg-theme-bg border-theme-primary/20">
+    <Card className="fixed bottom-20 right-4 w-80 h-[500px] flex flex-col shadow-2xl z-[9999] border-theme-primary/20">
       {/* Header */}
       <div className="p-4 border-b border-theme-primary/20 flex items-center justify-between bg-theme-primary text-theme-bg rounded-t-lg">
         <div className="flex items-center gap-3">
