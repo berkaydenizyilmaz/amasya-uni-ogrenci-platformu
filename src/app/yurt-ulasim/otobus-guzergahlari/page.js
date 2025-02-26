@@ -1,11 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Header from "@/components/header";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { t } from "@/lib/i18n";
-import GoogleMaps from "@/components/google-maps";
+import L from 'leaflet';
+
+// Haritayı client-side'da yükle
+const Map = dynamic(() => import("@/components/map"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
+      <div className="text-gray-500">Harita yükleniyor...</div>
+    </div>
+  ),
+});
 
 /**
  * Otobüs güzergahları
@@ -14,28 +25,38 @@ const routes = {
   "4": {
     name: "4 YÜKSEK OKUL",
     stops: [
-      { lat: 40.6550, lng: 35.8330, name: "YÜKSEK OKUL" },
-      { lat: 40.6540, lng: 35.8320, name: "MEYDAN" },
-      { lat: 40.6530, lng: 35.8310, name: "İHSANİYE" },
-      { lat: 40.6520, lng: 35.8300, name: "HASTANE" },
-      { lat: 40.6510, lng: 35.8290, name: "İSTASYON" }
+      { name: "Şehir Merkezi", location: [40.64961638380662, 35.79509470498191] },
+      { name: "İpekköy", location: [40.661633893026355, 35.84740413988185] }
     ],
-    color: "#FF0000", // Kırmızı rota
+    path: [
+      [40.64961638380662, 35.79509470498191],
+      [40.661633893026355, 35.84740413988185]
+    ],
     schedule: [
-      "07:00", "07:30", "08:00", "08:30", "09:00",
-      "16:00", "16:30", "17:00", "17:30", "18:00"
+      "06:30", "07:00", "07:30", "08:00", "08:30",
+      "09:00", "09:30", "10:00", "10:30", "11:00",
+      "11:30", "12:00", "12:30", "13:00", "13:30",
+      "14:00", "14:30", "15:00", "15:30", "16:00",
+      "16:30", "17:00", "17:30", "18:00", "18:30",
+      "19:00", "19:30", "20:00"
     ]
   },
   "6": {
-    name: "6 FEN EDEBİYAT",
+    name: "6 ÜNİVERSİTE",
     stops: [
-      { lat: 40.6560, lng: 35.8340, name: "YÜKSEK OKUL HACILAR MEYDANI" },
-      { lat: 40.6570, lng: 35.8350, name: "FEN EDEBİYAT FAKÜLTESİ" }
+      { name: "Şehir Merkezi", location: [40.64931985520128, 35.79082677184058] },
+      { name: "Üniversite", location: [40.606991030149224, 35.81216914460894] }
     ],
-    color: "#0000FF", // Mavi rota
+    path: [
+      [40.64931985520128, 35.79082677184058],
+      [40.606991030149224, 35.81216914460894]
+    ],
     schedule: [
-      "07:15", "07:45", "08:15", "08:45", "09:15",
-      "16:15", "16:45", "17:15", "17:45", "18:15"
+      "07:00", "07:30", "08:00", "08:30", "09:00",
+      "09:30", "10:00", "10:30", "11:00", "11:30",
+      "12:00", "12:30", "13:00", "13:30", "14:00",
+      "14:30", "15:00", "15:30", "16:00", "16:30",
+      "17:00", "17:30", "18:00"
     ]
   }
 };
@@ -46,127 +67,79 @@ const routes = {
  */
 export default function BusRoutesPage() {
   const [selectedRoute, setSelectedRoute] = useState("4");
-  const [map, setMap] = useState(null);
-  const [markers, setMarkers] = useState([]);
-  const [polyline, setPolyline] = useState(null);
+  const [mapKey, setMapKey] = useState(0); // Her sekme değişiminde haritayı yeniden yüklemek için
 
-  // Harita yüklendiğinde
-  const onMapLoad = (map) => {
-    setMap(map);
-    // İlk rotayı çiz
-    drawRoute("4", map);
-  };
-
-  // Rota çizme fonksiyonu
-  const drawRoute = (routeId, map) => {
-    // Önceki işaretçileri temizle
-    markers.forEach(marker => marker.setMap(null));
-    if (polyline) polyline.setMap(null);
-
-    const route = routes[routeId];
-    const newMarkers = [];
-    const path = route.stops.map(stop => {
-      // Durak işaretçisi ekle
-      const marker = new window.google.maps.Marker({
-        position: { lat: stop.lat, lng: stop.lng },
-        map: map,
-        title: stop.name
-      });
-      newMarkers.push(marker);
-      return { lat: stop.lat, lng: stop.lng };
-    });
-
-    // Rota çizgisi
-    const newPolyline = new window.google.maps.Polyline({
-      path: path,
-      geodesic: true,
-      strokeColor: route.color,
-      strokeOpacity: 1.0,
-      strokeWeight: 3
-    });
-
-    newPolyline.setMap(map);
-    setMarkers(newMarkers);
-    setPolyline(newPolyline);
-
-    // Haritayı rotaya sığdır
-    const bounds = new window.google.maps.LatLngBounds();
-    path.forEach(point => bounds.extend(point));
-    map.fitBounds(bounds);
-  };
-
-  // Tab değiştiğinde rotayı güncelle
-  const handleRouteChange = (routeId) => {
-    setSelectedRoute(routeId);
-    if (map) {
-      drawRoute(routeId, map);
-    }
+  const handleRouteChange = (value) => {
+    setSelectedRoute(value);
+    setMapKey(prev => prev + 1); // Haritayı yeniden yükle
   };
 
   return (
     <main className="min-h-screen bg-theme-bg">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative h-[40vh] flex items-center justify-center">
-        <div className="absolute inset-0">
-          <div className="w-full h-full bg-theme-primary opacity-90" />
-        </div>
-        <div className="relative text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
-            Otobüs Güzergahları
-          </h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
-            Kampüs otobüs hatları ve durakları
-          </p>
-        </div>
-      </section>
-
-      <div className="container mx-auto py-16 px-4">
-        <Tabs defaultValue="4" className="space-y-8" onValueChange={handleRouteChange}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="4">4 YÜKSEK OKUL</TabsTrigger>
-            <TabsTrigger value="6">6 FEN EDEBİYAT</TabsTrigger>
+      <div className="container mx-auto p-4 space-y-4">
+        <h1 className="text-2xl font-bold">Otobüs Güzergahları</h1>
+        
+        <Tabs defaultValue="4" onValueChange={handleRouteChange}>
+          <TabsList>
+            <TabsTrigger value="4">4 Numaralı Hat</TabsTrigger>
+            <TabsTrigger value="6">6 Numaralı Hat</TabsTrigger>
           </TabsList>
-
-          {Object.entries(routes).map(([id, route]) => (
-            <TabsContent key={id} value={id} className="space-y-8">
-              {/* Harita */}
-              <Card className="p-0 overflow-hidden h-[500px] relative">
-                <GoogleMaps onMapLoad={onMapLoad} />
-              </Card>
-
-              {/* Güzergah Bilgileri */}
-              <Card className="p-6">
-                <h3 className="text-2xl font-bold mb-4">{route.name}</h3>
-                
-                {/* Duraklar */}
-                <div className="mb-6">
-                  <h4 className="text-lg font-semibold mb-3">Duraklar</h4>
-                  <div className="space-y-2">
-                    {route.stops.map((stop, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-theme-primary rounded-full" />
-                        <span>{stop.name}</span>
-                      </div>
+          
+          <TabsContent value="4">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">{routes['4'].name}</h2>
+              <div className="h-[500px]">
+                <Map key={mapKey} route={routes['4']} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Card className="p-4">
+                  <h3 className="font-semibold mb-2">Duraklar:</h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    {routes['4'].stops.map((stop, index) => (
+                      <li key={index}>{stop.name}</li>
+                    ))}
+                  </ul>
+                </Card>
+                <Card className="p-4">
+                  <h3 className="font-semibold mb-2">Sefer Saatleri:</h3>
+                  <div className="grid grid-cols-4 gap-2">
+                    {routes['4'].schedule.map((time, index) => (
+                      <div key={index} className="text-sm">{time}</div>
                     ))}
                   </div>
-                </div>
-
-                {/* Sefer Saatleri */}
-                <div>
-                  <h4 className="text-lg font-semibold mb-3">Sefer Saatleri</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                    {route.schedule.map((time, index) => (
-                      <div key={index} className="bg-theme-primary/10 rounded-md p-2 text-center">
-                        {time}
-                      </div>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="6">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">{routes['6'].name}</h2>
+              <div className="h-[500px]">
+                <Map key={mapKey} route={routes['6']} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Card className="p-4">
+                  <h3 className="font-semibold mb-2">Duraklar:</h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    {routes['6'].stops.map((stop, index) => (
+                      <li key={index}>{stop.name}</li>
+                    ))}
+                  </ul>
+                </Card>
+                <Card className="p-4">
+                  <h3 className="font-semibold mb-2">Sefer Saatleri:</h3>
+                  <div className="grid grid-cols-4 gap-2">
+                    {routes['6'].schedule.map((time, index) => (
+                      <div key={index} className="text-sm">{time}</div>
                     ))}
                   </div>
-                </div>
-              </Card>
-            </TabsContent>
-          ))}
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </main>
