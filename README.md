@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Amasya Üniversitesi Öğrenci Platformu
 
-## Getting Started
+Amasya Üniversitesi öğrencileri için geliştirilmiş kapsamlı bir web platformu. Bu platform, öğrencilerin üniversite hayatını kolaylaştırmak ve Amasya şehrini daha iyi tanımalarını sağlamak amacıyla tasarlanmıştır.
 
-First, run the development server:
+## 🚀 Özellikler
 
+- 📚 Not paylaşım sistemi
+- 📅 Etkinlik takvimi ve yönetimi
+- 🏛️ Üniversite bilgileri ve akademik takvim
+- 🏠 Yurt bilgileri ve otobüs güzergahları
+- 🏰 Amasya şehir rehberi
+- 🍖 Yöresel lezzetler tanıtımı
+- 🤖 AI destekli şehir rehberi chatbot
+- 🌐 Çoklu dil desteği (Türkçe/İngilizce)
+
+## 🛠️ Teknolojiler
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Prisma
+- PostgreSQL (Neon)
+- NextAuth.js
+- Cloudinary
+- Google Gemini AI
+- Leaflet Maps
+- shadcn/ui
+
+## 📋 Gereksinimler
+
+- Node.js 18.17 veya üzeri
+- npm veya yarn
+- PostgreSQL veritabanı
+- Cloudinary hesabı
+- Google Gemini API anahtarı
+
+## ⚙️ Kurulum
+
+1. Repoyu klonlayın:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/kullanici-adi/amasya-uni-ogrenci-platformu.git
+cd amasya-uni-ogrenci-platformu
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Bağımlılıkları yükleyin:
+```bash
+npm install
+# veya
+yarn install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. .env dosyasını oluşturun ve gerekli değişkenleri ekleyin:
+```env
+# Veritabanı
+DATABASE_URL="postgresql://kullanici:sifre@host:port/veritabani"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# NextAuth.js
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="gizli-anahtar"
 
-## Learn More
+# Cloudinary
+CLOUDINARY_CLOUD_NAME="cloud-name"
+CLOUDINARY_API_KEY="api-key"
+CLOUDINARY_API_SECRET="api-secret"
 
-To learn more about Next.js, take a look at the following resources:
+# Google Gemini AI
+GEMINI_API_KEY="gemini-api-key"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Veritabanı şemasını oluşturun:
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. Geliştirme sunucusunu başlatın:
+```bash
+npm run dev
+# veya
+yarn dev
+```
 
-## Deploy on Vercel
+6. Tarayıcınızda http://localhost:3000 adresini açın
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Proje Yapısı
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/                    # Next.js app router sayfaları
+├── components/            # Yeniden kullanılabilir bileşenler
+├── lib/                  # Yardımcı fonksiyonlar ve hooks
+├── api/                  # API route'ları
+├── styles/              # Global stil dosyaları
+├── types/               # TypeScript tip tanımlamaları
+├── utils/              # Yardımcı fonksiyonlar
+└── locales/            # Dil dosyaları
+```
+
+## 🔒 Güvenlik
+
+- Tüm form girişleri Zod ile doğrulanır
+- API rotaları NextAuth.js ile korunur
+- XSS koruması için içerik sanitizasyonu uygulanır
+- Dosya yüklemeleri Cloudinary üzerinden güvenli bir şekilde yapılır
