@@ -44,7 +44,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-theme-primary/20 bg-theme-bg/95 backdrop-blur supports-[backdrop-filter]:bg-theme-bg/60">
-      <div className="mx-auto px-4">
+      <div className="mx-auto px-14">
         <nav className="flex h-16 items-center justify-between">
           {/* Logo ve Site Adı */}
           <Link href="/" className="flex items-center space-x-2 transition-colors hover:opacity-90">

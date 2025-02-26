@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { PlusCircle, MessageCircle, Calendar, FileText, X, Bookmark, BookmarkCheck, Trash2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PlusCircle, MessageCircle, Calendar, FileText, X, Bookmark, BookmarkCheck, Trash2, BookCopy } from "lucide-react";
 import Link from "next/link";
 import { t } from "@/lib/i18n";
 import {
@@ -132,6 +133,7 @@ export default function NotesPage() {
   const [selectedCategory, setSelectedCategory] = useState("DERS_NOTU");
 
   const fetchPosts = async () => {
+    setLoading(true);
     try {
       const response = await fetch("/api/posts");
       const data = await response.json();
@@ -294,6 +296,7 @@ export default function NotesPage() {
     setSelectedFaculty(value);
     setSelectedDepartment("");
     setAvailableDepartments(FACULTIES[value] || []);
+    setFilters(prev => ({ ...prev, faculty: value, department: "" }));
   };
 
   const handleDepartmentChange = (value) => {
@@ -343,6 +346,7 @@ export default function NotesPage() {
 
   useEffect(() => {
     setMounted(true);
+    setLoading(true);
     fetchPosts();
     if (session) {
       fetchBookmarkedPosts();
@@ -623,119 +627,159 @@ export default function NotesPage() {
 
         {/* Notlar Listesi */}
         <div className="grid grid-cols-1 gap-6">
-          {filteredPosts.map((post) => (
-            <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-all">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Avatar className="w-6 h-6">
-                        <AvatarFallback>
-                          {post.author.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm text-theme-text-muted">{post.author.name}</span>
-                      <span className="text-sm text-theme-text-muted">•</span>
-                      <span className="text-sm text-theme-text-muted">
-                        {new Date(post.createdAt).toLocaleDateString('tr-TR')}
+          {loading ? (
+            <div className="space-y-6">
+              {[...Array(3)].map((_, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Skeleton className="w-8 h-8 rounded-full" />
+                          <div className="space-y-2">
+                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-3 w-16" />
+                          </div>
+                        </div>
+                        <Skeleton className="h-6 w-3/4 mb-2" />
+                        <Skeleton className="h-4 w-full mb-4" />
+                        <div className="flex gap-2">
+                          <Skeleton className="h-6 w-20" />
+                          <Skeleton className="h-6 w-20" />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-8 w-8" />
+                        <Skeleton className="h-8 w-8" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-theme-primary/10">
+                      <div className="flex items-center gap-4">
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-4 w-16" />
+                      </div>
+                      <Skeleton className="h-6 w-24" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="flex flex-col items-center gap-4 text-theme-text-muted">
+                <BookCopy className="w-12 h-12 opacity-50" />
+                <p>Henüz not paylaşılmamış</p>
+              </div>
+            </div>
+          ) : (
+            filteredPosts.map((post) => (
+              <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-all">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Avatar className="w-6 h-6">
+                          <AvatarFallback>
+                            {post.author.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm text-theme-text-muted">{post.author.name}</span>
+                        <span className="text-sm text-theme-text-muted">•</span>
+                        <span className="text-sm text-theme-text-muted">
+                          {new Date(post.createdAt).toLocaleDateString('tr-TR')}
+                        </span>
+                      </div>
+                      <Link href={`/not-paylasimi/${post.id}`} className="block group">
+                        <h3 className="text-lg font-semibold mb-1 group-hover:text-theme-primary transition-colors">
+                          {post.title}
+                        </h3>
+                        <p className="text-sm text-theme-text-muted line-clamp-2 mb-2">
+                          {post.content}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {post.faculty && (
+                            <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded">
+                              {post.faculty}
+                            </span>
+                          )}
+                          {post.department && (
+                            <span className="text-xs px-2 py-1 bg-green-50 text-green-600 rounded">
+                              {post.department}
+                            </span>
+                          )}
+                        </div>
+                      </Link>
+                    </div>
+                    <div className="flex flex-row gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleBookmark(post.id)}
+                        className={`w-8 h-8 p-0 ${bookmarkedPosts.includes(post.id) ? "text-theme-primary" : ""}`}
+                      >
+                        {bookmarkedPosts.includes(post.id) ? (
+                          <BookmarkCheck className="w-3 h-3" />
+                        ) : (
+                          <Bookmark className="w-3 h-3" />
+                        )}
+                      </Button>
+                      {session?.user?.email === post.author.email ? (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="hover:bg-red-600 w-8 h-8 p-0"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Notu Silmek İstediğinize Emin Misiniz?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Bu işlem geri alınamaz. Not ve ilgili tüm yorumlar kalıcı olarak silinecektir.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(post.id)}
+                                className="bg-red-500 hover:bg-red-600"
+                              >
+                                Sil
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-theme-primary/10">
+                    <div className="flex items-center gap-4">
+                      <Link
+                        href={`/not-paylasimi/${post.id}`}
+                        className="flex items-center gap-1 text-xs text-theme-text-muted hover:text-theme-primary transition-colors"
+                      >
+                        <MessageCircle className="w-3 h-3" />
+                        {post._count.comments} Yorum
+                      </Link>
+                      {post.files && post.files.length > 0 && (
+                        <span className="flex items-center gap-1 text-xs text-theme-text-muted">
+                          <FileText className="w-3 h-3" />
+                          {post.files.length} Dosya
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs px-2 py-1 bg-theme-primary/10 text-theme-primary rounded">
+                        {getCategoryLabel(post.category)}
                       </span>
                     </div>
-                    <Link href={`/not-paylasimi/${post.id}`} className="block group">
-                      <h3 className="text-lg font-semibold mb-1 group-hover:text-theme-primary transition-colors">
-                        {post.title}
-                      </h3>
-                      <p className="text-sm text-theme-text-muted line-clamp-2 mb-2">
-                        {post.content}
-                      </p>
-                      <div className="flex flex-wrap items-center gap-2">
-                        {post.faculty && (
-                          <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded">
-                            {post.faculty}
-                          </span>
-                        )}
-                        {post.department && (
-                          <span className="text-xs px-2 py-1 bg-green-50 text-green-600 rounded">
-                            {post.department}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
                   </div>
-                  <div className="flex flex-row gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleBookmark(post.id)}
-                      className={`w-8 h-8 p-0 ${bookmarkedPosts.includes(post.id) ? "text-theme-primary" : ""}`}
-                    >
-                      {bookmarkedPosts.includes(post.id) ? (
-                        <BookmarkCheck className="w-3 h-3" />
-                      ) : (
-                        <Bookmark className="w-3 h-3" />
-                      )}
-                    </Button>
-                    {session?.user?.email === post.author.email ? (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            className="hover:bg-red-600 w-8 h-8 p-0"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Notu Silmek İstediğinize Emin Misiniz?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Bu işlem geri alınamaz. Not ve ilgili tüm yorumlar kalıcı olarak silinecektir.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(post.id)}
-                              className="bg-red-500 hover:bg-red-600"
-                            >
-                              Sil
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-theme-primary/10">
-                  <div className="flex items-center gap-4">
-                    <Link
-                      href={`/not-paylasimi/${post.id}`}
-                      className="flex items-center gap-1 text-xs text-theme-text-muted hover:text-theme-primary transition-colors"
-                    >
-                      <MessageCircle className="w-3 h-3" />
-                      {post._count.comments} Yorum
-                    </Link>
-                    {post.files && post.files.length > 0 && (
-                      <span className="flex items-center gap-1 text-xs text-theme-text-muted">
-                        <FileText className="w-3 h-3" />
-                        {post.files.length} Dosya
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs px-2 py-1 bg-theme-primary/10 text-theme-primary rounded">
-                      {getCategoryLabel(post.category)}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-
-          {filteredPosts.length === 0 && (
-            <div className="text-center text-theme-text-muted py-8">
-              {loading ? "Yükleniyor..." : "Henüz not paylaşılmamış"}
-            </div>
+                </CardContent>
+              </Card>
+            ))
           )}
         </div>
       </div>
