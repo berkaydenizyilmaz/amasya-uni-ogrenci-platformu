@@ -164,16 +164,6 @@ export default function Header() {
                         </NavigationMenuLink>
                       </div>
                       <div>
-                        <NavigationMenuLink asChild>
-                          <Link href="/yurt-ulasim/sefer-saatleri" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
-                            <div className="text-sm font-medium leading-none text-theme-text">
-                              {t('common.menu.busSchedule')}
-                            </div>
-                            <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
-                              {t('common.menu.busScheduleDesc')}
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
                       </div>
                     </div>
                   </NavigationMenuContent>
@@ -200,16 +190,7 @@ export default function Header() {
                         </NavigationMenuLink>
                       </div>
                       <div>
-                        <NavigationMenuLink asChild>
-                          <Link href="/amasya/gezi-rotalari" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-theme-primary/10 hover:text-theme-primary-hover">
-                            <div className="text-sm font-medium leading-none text-theme-text">
-                              {t('common.menu.tourRoutes')}
-                            </div>
-                            <p className="line-clamp-2 text-sm leading-snug text-theme-text-muted">
-                              {t('common.menu.tourRoutesDesc')}
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
+                        
                       </div>
                       <div>
                         <NavigationMenuLink asChild>
