@@ -57,6 +57,32 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-4">
             <NavigationMenu>
               <NavigationMenuList className="flex items-center gap-1">
+                {/* Admin Menüsü */}
+                {session?.user?.role === "ADMIN" && (
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[200px] gap-3 p-4">
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href="/admin/etkinlikler"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            >
+                              <div className="text-sm font-medium leading-none">
+                                Etkinlik Yönetimi
+                              </div>
+                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                Etkinlikleri onayla veya reddet
+                              </p>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                )}
+
                 {/* Üniversitemiz */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="h-9 px-4 py-2 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover">
@@ -216,32 +242,6 @@ export default function Header() {
                     {t('common.menu.events')}
                   </Link>
                 </NavigationMenuItem>
-
-                {/* Admin Menüsü */}
-                {session?.user?.role === "ADMIN" && (
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-3 p-4">
-                        <li>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href="/admin/etkinlikler"
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            >
-                              <div className="text-sm font-medium leading-none">
-                                Etkinlik Yönetimi
-                              </div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Etkinlikleri onayla veya reddet
-                              </p>
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                )}
               </NavigationMenuList>
 
               <NavigationMenuViewport className="absolute top-[100%] left-0 w-full origin-top-center overflow-hidden rounded-md border border-theme-primary/20 bg-theme-bg text-theme-text shadow-lg animate-in data-[motion=from-start]:animate-in data-[motion=from-end]:animate-out data-[motion=to-end]:animate-in" />
@@ -274,9 +274,7 @@ export default function Header() {
                   {session?.user?.role === "ADMIN" && (
                     <>
                       <DropdownMenuItem asChild>
-                        <Link href="/admin" className="text-theme-text hover:text-theme-primary">
-                          Yönetim Paneli
-                        </Link>
+                        
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                     </>
