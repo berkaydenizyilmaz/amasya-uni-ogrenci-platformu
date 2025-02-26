@@ -53,6 +53,7 @@ model User {
   posts         Post[]
   comments      Comment[]
   bookmarks     Bookmark[]
+  events        Event[]   // Kullanıcının paylaştığı etkinlikler
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -133,4 +134,34 @@ enum FileType {
   EXCEL
   POWERPOINT
   OTHER
+}
+
+// Etkinlik modeli
+model Event {
+  id          String      @id @default(cuid())
+  title       String
+  description String      @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  location    String
+  category    EventCategory
+  status      EventStatus @default(PENDING)
+  author      User        @relation(fields: [authorId], references: [id])
+  authorId    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum EventCategory {
+  AKADEMIK
+  KULTUR
+  SPOR
+  SOSYAL
+  DIGER
+}
+
+enum EventStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
