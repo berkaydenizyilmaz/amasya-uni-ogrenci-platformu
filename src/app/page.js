@@ -68,7 +68,7 @@ export default function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative h-[30vh] min-h-[300px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-theme-primary to-theme-primary-hover opacity-90" />
         <div className="absolute inset-0 bg-grid-white/10" />
         <div className="container relative mx-auto px-4 text-center">

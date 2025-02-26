@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FileText, MessageCircle, Trash2, Download, Loader2, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { t } from "@/lib/i18n";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,7 +42,7 @@ export default function PostDetailPage({ params }) {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || "Not yüklenirken bir hata oluştu");
+        throw new Error(data.error || t('notes.errors.loadFailed'));
       }
 
       setPost(data);
@@ -58,7 +59,7 @@ export default function PostDetailPage({ params }) {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || "Yorumlar yüklenirken bir hata oluştu");
+        throw new Error(data.error || t('notes.errors.commentFailed'));
       }
 
       setComments(data);
@@ -71,7 +72,7 @@ export default function PostDetailPage({ params }) {
 
   const handleDelete = async () => {
     if (!session || session.user.email !== post.author.email) {
-      setError("Bu notu silme yetkiniz yok");
+      setError(t('notes.errors.noPermission'));
       return;
     }
 
@@ -82,7 +83,7 @@ export default function PostDetailPage({ params }) {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "Not silinirken bir hata oluştu");
+        throw new Error(data.error || t('notes.errors.deleteFailed'));
       }
 
       router.push("/not-paylasimi");
@@ -94,12 +95,12 @@ export default function PostDetailPage({ params }) {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!session) {
-      setError("Yorum yapmak için giriş yapmalısınız");
+      setError(t('notes.errors.requireLogin'));
       return;
     }
 
     if (!commentContent.trim()) {
-      setError("Yorum boş olamaz");
+      setError(t('notes.errors.emptyComment'));
       return;
     }
 
@@ -118,7 +119,7 @@ export default function PostDetailPage({ params }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Yorum gönderilirken bir hata oluştu");
+        throw new Error(data.error || t('notes.errors.commentFailed'));
       }
 
       setCommentContent("");
@@ -138,15 +139,14 @@ export default function PostDetailPage({ params }) {
 
       if (!response.ok) {
         const data = await response.json();
-        setError(data.error || "Yorum silinirken bir hata oluştu");
+        setError(data.error || t('notes.errors.commentFailed'));
         return;
       }
 
-      // Yorumları yenile
       fetchComments();
     } catch (error) {
       console.error("Comment delete error:", error);
-      setError("Yorum silinirken bir hata oluştu");
+      setError(t('notes.errors.commentFailed'));
     }
   };
 
@@ -243,7 +243,7 @@ export default function PostDetailPage({ params }) {
       <main className="min-h-screen bg-theme-bg">
         <Header />
         <div className="container mx-auto px-4 py-8">
-          <div className="text-center">Not bulunamadı</div>
+          <div className="text-center">{t('notes.detail.notFound')}</div>
         </div>
       </main>
     );
@@ -284,25 +284,25 @@ export default function PostDetailPage({ params }) {
                       variant="destructive"
                       size="sm"
                       className="hover:bg-red-600"
-                      title="Notu Sil"
+                      title={t('notes.detail.delete.title')}
                     >
                       <Trash2 className="w-3 h-3" />
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Notu Silmek İstediğinize Emin Misiniz?</AlertDialogTitle>
+                      <AlertDialogTitle>{t('notes.detail.delete.title')}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Bu işlem geri alınamaz. Not ve ilgili tüm yorumlar kalıcı olarak silinecektir.
+                        {t('notes.detail.delete.description')}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                      <AlertDialogCancel>{t('notes.detail.delete.cancel')}</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={handleDelete}
                         className="bg-red-500 hover:bg-red-600"
                       >
-                        Sil
+                        {t('notes.detail.delete.confirm')}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -334,7 +334,7 @@ export default function PostDetailPage({ params }) {
 
             {post.files && post.files.length > 0 && (
               <div className="border rounded-lg p-4 mb-6">
-                <h3 className="font-medium mb-3">Dosyalar</h3>
+                <h3 className="font-medium mb-3">{t('notes.detail.files')}</h3>
                 <div className="grid gap-2">
                   {post.files.map((file, index) => (
                     <div key={index} className="flex items-center justify-between bg-theme-primary/5 rounded p-2">
@@ -363,7 +363,7 @@ export default function PostDetailPage({ params }) {
         <div className="space-y-6">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <MessageCircle className="w-5 h-5" />
-            Yorumlar {!commentsLoading && `(${comments.length})`}
+            {t('notes.detail.comments.title')} {!commentsLoading && `(${comments.length})`}
           </h2>
 
           {error && (
@@ -374,7 +374,7 @@ export default function PostDetailPage({ params }) {
 
           <form onSubmit={handleCommentSubmit} className="space-y-4">
             <Textarea
-              placeholder="Yorumunuzu yazın..."
+              placeholder={t('notes.detail.comments.placeholder')}
               value={commentContent}
               onChange={(e) => setCommentContent(e.target.value)}
               disabled={!session || isSubmitting}
@@ -384,7 +384,7 @@ export default function PostDetailPage({ params }) {
               disabled={!session || isSubmitting}
               className="w-full"
             >
-              {isSubmitting ? "Gönderiliyor..." : "Yorum Yap"}
+              {isSubmitting ? t('notes.detail.comments.submitting') : t('notes.detail.comments.submit')}
             </Button>
           </form>
 
@@ -393,13 +393,13 @@ export default function PostDetailPage({ params }) {
               <div className="flex items-center justify-center py-8">
                 <div className="flex items-center gap-2 text-theme-text-muted">
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Yorumlar yükleniyor...</span>
+                  <span>{t('notes.detail.comments.loading')}</span>
                 </div>
               </div>
             ) : comments.length === 0 ? (
               <div className="text-center py-8 bg-theme-bg-secondary rounded-lg border border-theme-primary/10">
                 <MessageSquare className="w-12 h-12 mx-auto text-theme-text-muted mb-2 opacity-50" />
-                <p className="text-theme-text-muted">İlk yorumu siz yapın</p>
+                <p className="text-theme-text-muted">{t('notes.detail.comments.empty')}</p>
               </div>
             ) : (
               comments.map((comment) => (
@@ -424,18 +424,18 @@ export default function PostDetailPage({ params }) {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Yorumu Silmek İstediğinize Emin Misiniz?</AlertDialogTitle>
+                            <AlertDialogTitle>{t('notes.detail.comments.delete.title')}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Bu işlem geri alınamaz.
+                              {t('notes.detail.comments.delete.description')}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                            <AlertDialogCancel>{t('notes.detail.delete.cancel')}</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleCommentDelete(comment.id)}
                               className="bg-red-500 hover:bg-red-600"
                             >
-                              Sil
+                              {t('notes.detail.delete.confirm')}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>

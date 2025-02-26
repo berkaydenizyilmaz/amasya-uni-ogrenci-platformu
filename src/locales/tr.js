@@ -2,6 +2,7 @@ export const tr = {
   common: {
     siteName: "AÜ Öğrenci Platformu",
     menu: {
+      navigation: "Menü",
       university: "Üniversitemiz",
       dormitory: "Yurt ve Ulaşım",
       notes: "Not Paylaşımı",
@@ -117,9 +118,10 @@ export const tr = {
       academicStructure: {
         title: "Akademik Yapı",
         faculties: {
-          title: "Fakültelerimiz",
-          subtitle: "Amasya Üniversitesi'nin akademik birimlerini keşfedin",
+          selectPrompt: "Lütfen detaylarını görmek için bir fakülte seçin",
           departments: "Bölümler",
+          title: "Fakültelerimiz",
+          subtitle: "Amasya Üniversitesi'nin akademik birimleri hakkında detaylı bilgi edinin",
           list: {
             education: {
               name: "Eğitim Fakültesi",
@@ -128,46 +130,43 @@ export const tr = {
                 "Matematik ve Fen Bilimleri Eğitimi",
                 "Temel Eğitim",
                 "Türkçe ve Sosyal Bilimler Eğitimi",
-                "Özel Eğitim",
-                "Eğitim Bilimleri",
-                "Yabancı Dil Eğitimi"
+                "Yabancı Diller Eğitimi"
               ]
             },
             arts: {
-              name: "Fen Edebiyat Fakültesi",
+              name: "Fen-Edebiyat Fakültesi",
               description: "Temel bilimler ve sosyal bilimler alanında eğitim veren fakültemiz",
               departments: [
-                "Matematik",
+                "Biyoloji",
                 "Fizik",
                 "Kimya",
-                "Biyoloji",
-                "Türk Dili ve Edebiyatı",
+                "Matematik",
                 "Tarih",
-                "Coğrafya"
+                "Türk Dili ve Edebiyatı"
               ]
             },
             fineArts: {
-              name: "Hattat Hamdullah Güzel Sanatlar Fakültesi",
+              name: "Güzel Sanatlar Fakültesi",
               description: "Sanat ve tasarım alanında eğitim veren fakültemiz",
               departments: [
                 "Geleneksel Türk Sanatları",
-                "Resim",
-                "Grafik Tasarım"
+                "Grafik Tasarımı",
+                "Resim"
               ]
             },
             theology: {
               name: "İlahiyat Fakültesi",
-              description: "İslami ilimler alanında eğitim veren fakültemiz",
+              description: "Dini bilimler alanında eğitim veren fakültemiz",
               departments: [
                 "İlahiyat"
               ]
             },
             economics: {
-              name: "Merzifon İktisadi ve İdari Bilimler Fakültesi",
-              description: "İktisat, işletme ve yönetim alanlarında eğitim veren fakültemiz",
+              name: "İktisadi ve İdari Bilimler Fakültesi",
+              description: "Ekonomi ve yönetim alanında eğitim veren fakültemiz",
               departments: [
-                "İşletme",
                 "İktisat",
+                "İşletme",
                 "Siyaset Bilimi ve Kamu Yönetimi",
                 "Uluslararası İlişkiler"
               ]
@@ -194,10 +193,9 @@ export const tr = {
               name: "Sağlık Bilimleri Fakültesi",
               description: "Sağlık bilimleri alanında eğitim veren fakültemiz",
               departments: [
-                "Hemşirelik",
-                "Ebelik",
                 "Beslenme ve Diyetetik",
-                "Fizyoterapi ve Rehabilitasyon"
+                "Ebelik",
+                "Hemşirelik"
               ]
             },
             medicine: {
@@ -244,6 +242,95 @@ export const tr = {
       vision: {
         title: "Vizyonumuz",
         content: "Eğitim, araştırma ve topluma hizmet alanlarında ulusal ve uluslararası düzeyde tanınan, tercih edilen, öncü bir üniversite olmaktır."
+      }
+    },
+    academicCalendar: {
+      title: "2024-2025 Akademik Takvimi",
+      subtitle: "Önlisans ve Lisans Eğitim-Öğretim Yılı",
+      tabs: {
+        prep: "Hazırlık Sınavları",
+        exams: "Muafiyet Sınavları",
+        fall: "Güz Dönemi",
+        spring: "Bahar Dönemi"
+      },
+      sections: {
+        prep: {
+          title: "Hazırlık ve Yeterlilik Sınavları",
+          items: {
+            proficiencyExam: {
+              title: "Yeterlilik/Seviye Belirleme Sınavı",
+              subtitle: "(Yabancı Dil Hazırlık Sınıfı Okuyan Öğrenciler için)",
+              resultDate: "Sonuç Açıklama"
+            },
+            courseRegistration: {
+              title: "Ders Kayıtları",
+              subtitle: "(Yeterlilik Sınavında Başarılı Olan Öğrenciler için)"
+            }
+          }
+        },
+        exams: {
+          title: "Muafiyet Sınavları",
+          items: {
+            languageExemption: {
+              title: "Yabancı Dil Muafiyet Sınavı",
+              subtitle: "(Hazırlık sınıfı olmayan Fakülte ve Yüksekokul öğrencilerine yöneliktir. Amaç Zorunlu Yabancı Dil dersinden muaf olacak düzeyde yabancı dil bilenleri tespit etmektir.)"
+            },
+            computerExemption: {
+              title: "Temel Bilgi Teknolojileri Kullanımı Muafiyet Sınavı",
+              subtitle: "(Bilgisayar Dersinden muaf olacak öğrencileri tespit etmek için Yapılan Sınav)"
+            },
+            turkishProficiency: {
+              title: "Yabancı Uyruklu Öğrencilerin Türkçe Yeterlilik Sınavı"
+            }
+          }
+        },
+        fall: {
+          title: "GÜZ DÖNEMİ",
+          events: {
+            tuitionPayment: "Katkı Payı Öğrenim Ücretinin 1 nci ve 2 nci Taksitinin Ödenmesi",
+            courseRegistration: "Ders Kaydı",
+            advisorApproval: "Danışman Onayı",
+            courseDates: "Derslerin Başlama/Bitiş Tarihleri",
+            addDrop: "Ders Ekleme,Silme, Mazeretli Ders Kaydı Baş.ve Ders Kayıt Tarihleri",
+            midterms: "Ara Sınavlar",
+            midtermGrades: "Ara Sınav Not Giriş Tarihleri",
+            finals: "Yarıyıl Sonu Sınav Tarihleri",
+            finalGrades: "Yarıyıl Sonu Sınav Sonuçlarının Giriş Tarihleri",
+            makeupExams: "Bütünleme Sınavları",
+            makeupGrades: "Bütünleme Sınav Sonuçlarının Giriş Tarihleri"
+          }
+        },
+        spring: {
+          title: "BAHAR DÖNEMİ",
+          events: {
+            tuitionPayment: "Katkı Payı Öğrenim Ücretinin 1 nci ve 2 nci Taksitinin Ödenmesi",
+            courseRegistration: "Ders Kaydı",
+            advisorApproval: "Danışman Onayı",
+            courseDates: "Derslerin Başlama/Bitiş Tarihleri",
+            addDrop: "Ders Ekleme,Silme, Mazeretli Ders Kaydı Baş.ve Ders Kayıt Tarihleri",
+            midterms: "Ara Sınavlar",
+            midtermGrades: "Ara Sınav Not Giriş Tarihleri",
+            finals: "Yarıyıl Sonu Sınav Tarihleri",
+            finalGrades: "Yarıyıl Sonu Sınav Sonuçlarının Giriş Tarihleri",
+            makeupExams: "Bütünleme Sınavları",
+            makeupGrades: "Bütünleme Sınav Sonuçlarının Giriş Tarihleri"
+          }
+        },
+        additional: {
+          title: "Ek Sınavlar ve Önemli Tarihler",
+          items: {
+            singleCourse: {
+              title: "Mezuniyet Tek Ders Sınavı"
+            },
+            finalSubmission: {
+              title: "Sınav Sonuçlarının Son Teslim Tarihi"
+            },
+            additionalExams: {
+              title: "Ek Sınav Tarihleri (Azami Öğrenim Süresini Dolduran Öğrenciler İçin)",
+              info: "(Sın.mtür.tar. 18-22 Ağustos 2025)"
+            }
+          }
+        }
       }
     }
   },
@@ -484,19 +571,302 @@ export const tr = {
         placeholder: "Yorumunuzu yazın...",
         submit: "Yorum Yap",
         submitting: "Gönderiliyor...",
-        count: "{{count}} Yorum"
+        count: "{{count}} Yorum",
+        loading: "Yorumlar yükleniyor...",
+        empty: "İlk yorumu siz yapın",
+        delete: {
+          title: "Yorumu Silmek İstediğinize Emin Misiniz?",
+          description: "Bu işlem geri alınamaz."
+        }
       }
     },
     errors: {
-      loadFailed: "Notlar yüklenirken bir hata oluştu",
+      loadFailed: "Not yüklenirken bir hata oluştu",
       shareFailed: "Not paylaşılırken bir hata oluştu",
       deleteFailed: "Not silinirken bir hata oluştu",
-      commentFailed: "Yorum gönderilirken bir hata oluştu",
+      commentFailed: "Yorum işlemi sırasında bir hata oluştu",
       requireLogin: "Yorum yapmak için giriş yapmalısınız",
       emptyComment: "Yorum boş olamaz",
-      noPermission: "Bu notu silme yetkiniz yok",
+      noPermission: "Bu işlem için yetkiniz yok",
       selectFaculty: "Lütfen bir fakülte seçin",
       selectDepartment: "Lütfen bir bölüm seçin"
+    }
+  },
+  busRoutes: {
+    title: "Otobüs Güzergahları",
+    subtitle: "Amasya içi ulaşım hatları ve güzergah bilgileri",
+    search: {
+      placeholder: "Hat numarası veya güzergah ara...",
+      notFound: "Aradığınız kriterlere uygun güzergah bulunamadı."
+    },
+    routeCard: {
+      number: "Hat Numarası",
+      direction: "Güzergah Yönü",
+      firstBus: "İlk Sefer",
+      lastBus: "Son Sefer",
+      frequency: "Sefer Sıklığı",
+      stops: "Duraklar",
+      showStops: "Durakları Göster",
+      hideStops: "Durakları Gizle",
+      minutes: "dakika"
+    },
+    filters: {
+      title: "Filtreler",
+      all: "Tümü",
+      university: "Üniversite Hatları",
+      central: "Merkez Hatları",
+      reset: "Filtreleri Sıfırla"
+    },
+    hero: {
+      title: "Otobüs Güzergahları",
+      subtitle: "Kampüs ulaşım hatları ve sefer saatleri"
+    },
+    map: {
+      title: "Güzergah Haritası",
+      loading: "Harita yükleniyor..."
+    },
+    stops: "Duraklar",
+    schedule: "Sefer Saatleri",
+    routes: {
+      "4": {
+        name: "4 YÜKSEK OKUL",
+        stops: {
+          center: "Şehir Merkezi",
+          ipekkoy: "İpekköy"
+        }
+      },
+      "6": {
+        name: "6 ÜNİVERSİTE",
+        stops: {
+          center: "Şehir Merkezi",
+          university: "Üniversite"
+        }
+      }
+    }
+  },
+  events: {
+    title: "Etkinlikler",
+    subtitle: "Kampüs etkinlikleri ve aktiviteleri",
+    filters: {
+      all: "Tüm Etkinlikler",
+      upcoming: "Yaklaşan Etkinlikler",
+      past: "Geçmiş Etkinlikler",
+      myEvents: "Etkinliklerim",
+      search: "Etkinlik ara...",
+      category: {
+        title: "Kategori",
+        all: "Tüm Kategoriler",
+        ACADEMIC: "Akademik",
+        CULTURAL: "Kültürel",
+        SPORTS: "Spor",
+        SOCIAL: "Sosyal",
+        CAREER: "Kariyer",
+        OTHER: "Diğer"
+      },
+      faculty: {
+        title: "Fakülte",
+        all: "Tüm Fakülteler"
+      },
+      date: {
+        title: "Tarih",
+        today: "Bugün",
+        tomorrow: "Yarın",
+        thisWeek: "Bu Hafta",
+        thisMonth: "Bu Ay",
+        custom: "Özel Tarih"
+      }
+    },
+    create: {
+      title: "Etkinlik Oluştur",
+      form: {
+        title: "Etkinlik Başlığı",
+        titlePlaceholder: "Etkinlik başlığını girin",
+        description: "Açıklama",
+        descriptionPlaceholder: "Etkinlik açıklamasını girin",
+        category: "Kategori",
+        faculty: "Fakülte",
+        date: "Tarih",
+        startTime: "Başlangıç Saati",
+        endTime: "Bitiş Saati",
+        location: "Konum",
+        locationPlaceholder: "Etkinlik konumunu girin",
+        capacity: "Kapasite",
+        capacityPlaceholder: "Katılımcı kapasitesini girin",
+        image: {
+          title: "Etkinlik Görseli",
+          description: "Etkinliğiniz için bir görsel yükleyin",
+          supportedFormats: "Desteklenen formatlar: JPEG, PNG (maks: 5MB)",
+          invalidFile: "Geçersiz dosya formatı veya boyut çok büyük (maks: 5MB)"
+        },
+        submit: "Etkinlik Oluştur",
+        submitting: "Oluşturuluyor..."
+      }
+    },
+    detail: {
+      notFound: "Etkinlik bulunamadı",
+      organizer: "Düzenleyen",
+      date: "Tarih",
+      time: "Saat",
+      location: "Konum",
+      capacity: "Kapasite",
+      participants: "Katılımcılar",
+      category: "Kategori",
+      faculty: "Fakülte",
+      register: {
+        button: "Etkinliğe Katıl",
+        success: "Etkinliğe başarıyla katıldınız",
+        alreadyRegistered: "Bu etkinliğe zaten kayıtlısınız",
+        capacityFull: "Etkinlik kapasitesi dolu",
+        login: "Etkinliğe katılmak için lütfen giriş yapın"
+      },
+      unregister: {
+        button: "Katılımı İptal Et",
+        success: "Katılım başarıyla iptal edildi",
+        confirm: {
+          title: "Katılımı İptal Et",
+          description: "Bu etkinliğe katılımınızı iptal etmek istediğinizden emin misiniz?",
+          cancel: "Hayır, Katılımı Koru",
+          confirm: "Evet, İptal Et"
+        }
+      },
+      delete: {
+        button: "Etkinliği Sil",
+        success: "Etkinlik başarıyla silindi",
+        confirm: {
+          title: "Etkinliği Sil",
+          description: "Bu etkinliği silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+          cancel: "Hayır, Etkinliği Koru",
+          confirm: "Evet, Sil"
+        }
+      },
+      edit: {
+        button: "Etkinliği Düzenle",
+        title: "Etkinliği Düzenle",
+        success: "Etkinlik başarıyla güncellendi"
+      },
+      share: {
+        title: "Etkinliği Paylaş",
+        copied: "Etkinlik bağlantısı panoya kopyalandı"
+      }
+    },
+    status: {
+      PENDING: "Onay Bekliyor",
+      APPROVED: "Onaylandı",
+      REJECTED: "Reddedildi",
+      CANCELLED: "İptal Edildi",
+      COMPLETED: "Tamamlandı"
+    },
+    admin: {
+      title: "Etkinlik Yönetimi",
+      subtitle: "Etkinlik başvurularını incele ve yönet",
+      tabs: {
+        pending: "Bekleyen",
+        approved: "Onaylanan",
+        rejected: "Reddedilen"
+      },
+      approve: {
+        button: "Onayla",
+        success: "Etkinlik başarıyla onaylandı"
+      },
+      reject: {
+        button: "Reddet",
+        success: "Etkinlik başarıyla reddedildi",
+        reason: {
+          title: "Red Nedeni",
+          placeholder: "Red nedenini girin"
+        }
+      },
+      noEvents: "Etkinlik bulunamadı"
+    },
+    errors: {
+      loadFailed: "Etkinlikler yüklenemedi",
+      createFailed: "Etkinlik oluşturulamadı",
+      updateFailed: "Etkinlik güncellenemedi",
+      deleteFailed: "Etkinlik silinemedi",
+      registerFailed: "Etkinliğe katılım başarısız",
+      unregisterFailed: "Katılım iptali başarısız",
+      requireLogin: "Bu işlemi gerçekleştirmek için giriş yapmalısınız",
+      noPermission: "Bu işlem için yetkiniz yok"
+    },
+    hero: {
+      title: "Etkinlikler",
+      subtitle: "Kampüs etkinlikleri ve aktiviteleri"
+    },
+    filters: {
+      search: "Etkinlik ara...",
+      category: "Kategori",
+      faculty: "Fakülte",
+      date: "Tarih",
+      allFaculties: "Tüm Fakülteler",
+      dates: {
+        today: "Bugün",
+        tomorrow: "Yarın",
+        thisWeek: "Bu Hafta",
+        thisMonth: "Bu Ay",
+        custom: "Özel Tarih"
+      }
+    },
+    categories: {
+      academic: "Akademik",
+      cultural: "Kültür & Sanat",
+      sports: "Spor",
+      social: "Sosyal",
+      career: "Kariyer",
+      other: "Diğer"
+    },
+    create: {
+      button: "Etkinlik Oluştur",
+      title: "Yeni Etkinlik",
+      form: {
+        title: "Başlık",
+        description: "Açıklama",
+        date: "Tarih",
+        time: "Saat",
+        location: "Konum",
+        category: "Kategori",
+        faculty: "Fakülte",
+        capacity: "Kapasite",
+        submit: "Oluştur",
+        submitting: "Oluşturuluyor..."
+      }
+    },
+    list: {
+      empty: "Henüz etkinlik bulunmuyor",
+      participants: "Katılımcı",
+      details: "Detayları Görüntüle"
+    },
+    detail: {
+      register: "Katıl",
+      unregister: "Katılımdan Ayrıl",
+      registered: "Katılıyorsunuz",
+      full: "Kontenjan Dolu",
+      organizer: "Düzenleyen",
+      date: "Tarih",
+      time: "Saat",
+      location: "Konum",
+      capacity: "Kapasite",
+      participants: "Katılımcılar",
+      category: "Kategori",
+      faculty: "Fakülte"
+    },
+    admin: {
+      tabs: {
+        pending: "Onay Bekleyenler",
+        approved: "Onaylananlar",
+        rejected: "Reddedilenler"
+      },
+      approve: "Onayla",
+      reject: "Reddet",
+      confirmApprove: "Bu etkinliği onaylamak istediğinize emin misiniz?",
+      confirmReject: "Bu etkinliği reddetmek istediğinize emin misiniz?"
+    },
+    errors: {
+      loadFailed: "Etkinlikler yüklenirken bir hata oluştu",
+      createFailed: "Etkinlik oluşturulurken bir hata oluştu",
+      updateFailed: "Etkinlik güncellenirken bir hata oluştu",
+      deleteFailed: "Etkinlik silinirken bir hata oluştu",
+      registerFailed: "Etkinliğe katılırken bir hata oluştu",
+      unregisterFailed: "Etkinlikten ayrılırken bir hata oluştu"
     }
   }
 }; 

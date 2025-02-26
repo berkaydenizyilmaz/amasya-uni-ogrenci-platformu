@@ -200,25 +200,18 @@ export default function AcademicCalendar() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-[30vh] min-h-[300px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/akademik-takvim.jpg"
-            alt="Akademik Takvim"
-            className="object-cover w-full h-full"
-            width={1920}
-            height={1080}
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-theme-primary to-theme-primary-hover opacity-90" />
-        </div>
-        <div className="relative text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-theme-bg">
-            2024-2025 Akademik Takvimi
-          </h1>
-          <p className="text-xl text-theme-bg/90">
-            Önlisans ve Lisans Eğitim-Öğretim Yılı
-          </p>
+      <section className="relative py-8 bg-theme-bg border-b border-theme-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1 text-left">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2 text-theme-text bg-clip-text text-transparent bg-gradient-to-r from-theme-primary to-theme-primary-hover">
+                {t('university.academicCalendar.title')}
+              </h1>
+              <p className="text-sm md:text-base text-theme-text-muted max-w-2xl">
+                {t('university.academicCalendar.subtitle')}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -227,29 +220,33 @@ export default function AcademicCalendar() {
         <div className="container mx-auto px-4">
           <Tabs defaultValue="prep" className="space-y-8">
             <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 gap-4">
-              <TabsTrigger value="prep">Hazırlık Sınavları</TabsTrigger>
-              <TabsTrigger value="exams">Muafiyet Sınavları</TabsTrigger>
-              <TabsTrigger value="fall">Güz Dönemi</TabsTrigger>
-              <TabsTrigger value="spring">Bahar Dönemi</TabsTrigger>
+              <TabsTrigger value="prep">{t('university.academicCalendar.tabs.prep')}</TabsTrigger>
+              <TabsTrigger value="exams">{t('university.academicCalendar.tabs.exams')}</TabsTrigger>
+              <TabsTrigger value="fall">{t('university.academicCalendar.tabs.fall')}</TabsTrigger>
+              <TabsTrigger value="spring">{t('university.academicCalendar.tabs.spring')}</TabsTrigger>
             </TabsList>
 
             {/* Hazırlık Sınavları */}
             <TabsContent value="prep">
               <Card>
                 <CardHeader>
-                  <CardTitle>Hazırlık ve Yeterlilik Sınavları</CardTitle>
+                  <CardTitle>{t('university.academicCalendar.sections.prep.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {calendar.preparatory.map((item, index) => (
                     <div key={index} className="border-b border-theme-primary/10 last:border-0 pb-4 last:pb-0">
-                      <h3 className="font-medium text-lg text-theme-text">{item.title}</h3>
+                      <h3 className="font-medium text-lg text-theme-text">
+                        {t('university.academicCalendar.sections.prep.items.proficiencyExam.title')}
+                      </h3>
                       {item.subtitle && (
-                        <p className="text-theme-text-muted text-sm mt-1">{item.subtitle}</p>
+                        <p className="text-theme-text-muted text-sm mt-1">
+                          {t('university.academicCalendar.sections.prep.items.proficiencyExam.subtitle')}
+                        </p>
                       )}
                       <div className="mt-2 flex items-center gap-2">
                         <span className="text-theme-primary">{item.date}</span>
                         {item.additionalInfo && (
-                          <span className="text-theme-text-muted">({item.additionalInfo})</span>
+                          <span className="text-theme-text-muted">({t('university.academicCalendar.sections.prep.items.proficiencyExam.resultDate')})</span>
                         )}
                       </div>
                     </div>
@@ -262,14 +259,18 @@ export default function AcademicCalendar() {
             <TabsContent value="exams">
               <Card>
                 <CardHeader>
-                  <CardTitle>Muafiyet Sınavları</CardTitle>
+                  <CardTitle>{t('university.academicCalendar.sections.exams.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {calendar.exams.map((item, index) => (
                     <div key={index} className="border-b border-theme-primary/10 last:border-0 pb-4 last:pb-0">
-                      <h3 className="font-medium text-lg text-theme-text">{item.title}</h3>
+                      <h3 className="font-medium text-lg text-theme-text">
+                        {t(`university.academicCalendar.sections.exams.items.${index === 0 ? 'languageExemption' : index === 1 ? 'computerExemption' : 'turkishProficiency'}.title`)}
+                      </h3>
                       {item.subtitle && (
-                        <p className="text-theme-text-muted text-sm mt-1">{item.subtitle}</p>
+                        <p className="text-theme-text-muted text-sm mt-1">
+                          {t(`university.academicCalendar.sections.exams.items.${index === 0 ? 'languageExemption' : 'computerExemption'}.subtitle`)}
+                        </p>
                       )}
                       <div className="mt-2">
                         <span className="text-theme-primary">{item.date}</span>
@@ -284,13 +285,26 @@ export default function AcademicCalendar() {
             <TabsContent value="fall">
               <Card>
                 <CardHeader>
-                  <CardTitle>{calendar.fall.title}</CardTitle>
+                  <CardTitle>{t('university.academicCalendar.sections.fall.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
                     {calendar.fall.events.map((event, index) => (
                       <div key={index} className="border-b border-theme-primary/10 last:border-0 pb-4 last:pb-0">
-                        <h3 className="font-medium text-lg text-theme-text">{event.title}</h3>
+                        <h3 className="font-medium text-lg text-theme-text">
+                          {t(`university.academicCalendar.sections.fall.events.${
+                            index === 0 ? 'tuitionPayment' :
+                            index === 1 ? 'courseRegistration' :
+                            index === 2 ? 'advisorApproval' :
+                            index === 3 ? 'courseDates' :
+                            index === 4 ? 'addDrop' :
+                            index === 5 ? 'midterms' :
+                            index === 6 ? 'midtermGrades' :
+                            index === 7 ? 'finals' :
+                            index === 8 ? 'finalGrades' :
+                            index === 9 ? 'makeupExams' : 'makeupGrades'
+                          }`)}
+                        </h3>
                         <div className="mt-2 flex items-center gap-2 text-theme-primary">
                           <span>{event.start}</span>
                           <span>-</span>
@@ -307,13 +321,26 @@ export default function AcademicCalendar() {
             <TabsContent value="spring">
               <Card>
                 <CardHeader>
-                  <CardTitle>{calendar.spring.title}</CardTitle>
+                  <CardTitle>{t('university.academicCalendar.sections.spring.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
                     {calendar.spring.events.map((event, index) => (
                       <div key={index} className="border-b border-theme-primary/10 last:border-0 pb-4 last:pb-0">
-                        <h3 className="font-medium text-lg text-theme-text">{event.title}</h3>
+                        <h3 className="font-medium text-lg text-theme-text">
+                          {t(`university.academicCalendar.sections.spring.events.${
+                            index === 0 ? 'tuitionPayment' :
+                            index === 1 ? 'courseRegistration' :
+                            index === 2 ? 'advisorApproval' :
+                            index === 3 ? 'courseDates' :
+                            index === 4 ? 'addDrop' :
+                            index === 5 ? 'midterms' :
+                            index === 6 ? 'midtermGrades' :
+                            index === 7 ? 'finals' :
+                            index === 8 ? 'finalGrades' :
+                            index === 9 ? 'makeupExams' : 'makeupGrades'
+                          }`)}
+                        </h3>
                         <div className="mt-2 flex items-center gap-2 text-theme-primary">
                           <span>{event.start}</span>
                           <span>-</span>
@@ -330,13 +357,18 @@ export default function AcademicCalendar() {
           {/* Ek Bilgiler */}
           <Card className="mt-8">
             <CardHeader>
-              <CardTitle>Ek Sınavlar ve Önemli Tarihler</CardTitle>
+              <CardTitle>{t('university.academicCalendar.sections.additional.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {calendar.additional.map((item, index) => (
                   <div key={index} className="border-b border-theme-primary/10 last:border-0 pb-4 last:pb-0">
-                    <h3 className="font-medium text-lg text-theme-text">{item.title}</h3>
+                    <h3 className="font-medium text-lg text-theme-text">
+                      {t(`university.academicCalendar.sections.additional.items.${
+                        index === 0 ? 'singleCourse' :
+                        index === 1 ? 'finalSubmission' : 'additionalExams'
+                      }.title`)}
+                    </h3>
                     {item.dates ? (
                       <div className="mt-2 space-y-2">
                         {item.dates.map((date, idx) => (
@@ -349,7 +381,9 @@ export default function AcademicCalendar() {
                       <div className="mt-2">
                         <span className="text-theme-primary">{item.date}</span>
                         {item.additionalInfo && (
-                          <span className="text-theme-text-muted ml-2">{item.additionalInfo}</span>
+                          <span className="text-theme-text-muted ml-2">
+                            {t('university.academicCalendar.sections.additional.items.additionalExams.info')}
+                          </span>
                         )}
                       </div>
                     )}

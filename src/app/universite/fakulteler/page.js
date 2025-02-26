@@ -130,30 +130,23 @@ export default function Faculties() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-[40vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/fakulteler.jpg"
-            alt={t('university.generalInfo.academicStructure.faculties.title')}
-            className="object-cover w-full h-full"
-            width={1920}
-            height={1080}
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-theme-primary to-theme-primary-hover opacity-90" />
-        </div>
-        <div className="relative text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-theme-bg">
-            {t('university.generalInfo.academicStructure.faculties.title')}
-          </h1>
-          <p className="text-xl md:text-2xl text-theme-bg/90 max-w-3xl mx-auto">
-            {t('university.generalInfo.academicStructure.faculties.subtitle')}
-          </p>
+      <section className="relative py-8 bg-theme-bg border-b border-theme-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1 text-left">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2 text-theme-text bg-clip-text text-transparent bg-gradient-to-r from-theme-primary to-theme-primary-hover">
+                {t('university.generalInfo.academicStructure.faculties.title')}
+              </h1>
+              <p className="text-sm md:text-base text-theme-text-muted max-w-2xl">
+                {t('university.generalInfo.academicStructure.faculties.subtitle')}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Fakülteler Listesi */}
-      <section className="py-16 bg-theme-bg">
+      <section className="py-8 bg-theme-bg">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Fakülte Kartları */}
@@ -232,7 +225,7 @@ export default function Faculties() {
               )}
               {selectedFaculty === null && (
                 <div className="h-full flex items-center justify-center text-theme-text-muted">
-                  <p>Lütfen detaylarını görmek için bir fakülte seçin</p>
+                  <p>{t('university.generalInfo.academicStructure.faculties.selectPrompt')}</p>
                 </div>
               )}
             </div>

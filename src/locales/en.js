@@ -2,13 +2,14 @@ export const en = {
     common: {
       siteName: "AU Student Platform",
       menu: {
+        navigation: "Menu",
         university: "Our University",
-        dormitory: "Dormitory & Transport",
+        dormitory: "Dormitory & Transportation",
         notes: "Note Sharing",
         events: "Events",
         amasya: "Our Amasya",
         menu: "Menu",
-        openMenu: "Open menu",
+        openMenu: "Open Menu",
         generalInfo: "General Info",
         generalInfoDesc: "Get detailed information about our university",
         faculties: "Faculties",
@@ -18,17 +19,12 @@ export const en = {
         dorms: "Dormitories",
         dormsDesc: "Dormitory facilities and accommodation options",
         busRoutes: "Bus Routes",
-        busRoutesDesc: "Campus transportation lines",
-        busSchedule: "Bus Schedule",
-        busScheduleDesc: "Current bus timetables",
+        busRoutesDesc: "Transportation options and bus routes",
         historicalPlaces: "Historical Places",
-        historicalPlacesDesc: "Historical and cultural heritage of Amasya",
-        tourRoutes: "Tour Routes",
-        tourRoutesDesc: "Recommended tour routes",
+        historicalPlacesDesc: "Historical and cultural places of Amasya",
         localFood: "Local Cuisine",
-        localFoodDesc: "Unique cuisine of Amasya",
-        eventManagement: "Event Management",
-        navigation: "Navigation"
+        localFoodDesc: "Traditional tastes of Amasya",
+        eventManagement: "Event Management"
       },
       auth: {
         login: "Login",
@@ -119,43 +115,91 @@ export const en = {
           title: "Academic Structure",
           faculties: {
             title: "Our Faculties",
-            subtitle: "Discover the academic units of Amasya University",
+            subtitle: "Learn more about the academic units of Amasya University",
+            selectPrompt: "Please select a faculty to view details",
+            departments: "Departments",
             list: {
               education: {
                 name: "Faculty of Education",
-                description: "Our faculty training future educators"
+                description: "Our faculty training future educators",
+                departments: [
+                  "Mathematics and Science Education",
+                  "Primary Education",
+                  "Turkish and Social Sciences Education",
+                  "Foreign Language Education"
+                ]
               },
               arts: {
                 name: "Faculty of Arts and Sciences",
-                description: "Our faculty providing education in basic sciences and social sciences"
+                description: "Our faculty providing education in basic sciences and social sciences",
+                departments: [
+                  "Biology",
+                  "Physics",
+                  "Chemistry",
+                  "Mathematics",
+                  "History",
+                  "Turkish Language and Literature"
+                ]
               },
               fineArts: {
-                name: "Hattat Hamdullah Faculty of Fine Arts",
-                description: "Our faculty providing education in art and design"
+                name: "Faculty of Fine Arts",
+                description: "Our faculty providing education in art and design",
+                departments: [
+                  "Traditional Turkish Arts",
+                  "Graphic Design",
+                  "Painting"
+                ]
               },
               theology: {
                 name: "Faculty of Theology",
-                description: "Our faculty providing education in Islamic sciences"
+                description: "Our faculty providing education in religious sciences",
+                departments: [
+                  "Theology"
+                ]
               },
               economics: {
-                name: "Merzifon Faculty of Economics and Administrative Sciences",
-                description: "Our faculty providing education in economics, business and management"
+                name: "Faculty of Economics and Administrative Sciences",
+                description: "Our faculty providing education in economics and management",
+                departments: [
+                  "Economics",
+                  "Business Administration",
+                  "Political Science and Public Administration",
+                  "International Relations"
+                ]
               },
               architecture: {
                 name: "Faculty of Architecture",
-                description: "Our faculty providing education in architecture and urban planning"
+                description: "Our faculty providing education in architecture and urban planning",
+                departments: [
+                  "Architecture",
+                  "City and Regional Planning"
+                ]
               },
               engineering: {
                 name: "Faculty of Engineering",
-                description: "Our faculty providing education in engineering"
+                description: "Our faculty providing education in engineering",
+                departments: [
+                  "Computer Engineering",
+                  "Electrical-Electronics Engineering",
+                  "Civil Engineering",
+                  "Mechanical Engineering"
+                ]
               },
               health: {
                 name: "Faculty of Health Sciences",
-                description: "Our faculty providing education in health sciences"
+                description: "Our faculty providing education in health sciences",
+                departments: [
+                  "Nutrition and Dietetics",
+                  "Midwifery",
+                  "Nursing"
+                ]
               },
               medicine: {
                 name: "Faculty of Medicine",
-                description: "Our faculty providing medical education"
+                description: "Our faculty providing medical education",
+                departments: [
+                  "Medicine"
+                ]
               }
             }
           },
@@ -286,6 +330,95 @@ export const en = {
             departments: [
               "Medicine"
             ]
+          }
+        }
+      },
+      academicCalendar: {
+        title: "2024-2025 Academic Calendar",
+        subtitle: "Associate and Undergraduate Academic Year",
+        tabs: {
+          prep: "Preparatory Exams",
+          exams: "Exemption Exams",
+          fall: "Fall Semester",
+          spring: "Spring Semester"
+        },
+        sections: {
+          prep: {
+            title: "Preparatory and Proficiency Exams",
+            items: {
+              proficiencyExam: {
+                title: "Proficiency/Level Determination Exam",
+                subtitle: "(For Students in Foreign Language Preparatory Class)",
+                resultDate: "Result Announcement"
+              },
+              courseRegistration: {
+                title: "Course Registration",
+                subtitle: "(For Students Who Passed the Proficiency Exam)"
+              }
+            }
+          },
+          exams: {
+            title: "Exemption Exams",
+            items: {
+              languageExemption: {
+                title: "Foreign Language Exemption Exam",
+                subtitle: "(For Faculty and College students without preparatory class. The aim is to identify those who know a foreign language at a level to be exempt from Compulsory Foreign Language course.)"
+              },
+              computerExemption: {
+                title: "Basic Information Technologies Usage Exemption Exam",
+                subtitle: "(Exam to identify students who will be exempt from Computer Course)"
+              },
+              turkishProficiency: {
+                title: "Turkish Proficiency Exam for International Students"
+              }
+            }
+          },
+          fall: {
+            title: "FALL SEMESTER",
+            events: {
+              tuitionPayment: "Payment of 1st and 2nd Installments of Tuition Fee",
+              courseRegistration: "Course Registration",
+              advisorApproval: "Advisor Approval",
+              courseDates: "Course Start/End Dates",
+              addDrop: "Course Add/Drop, Late Course Registration and Course Registration Dates",
+              midterms: "Midterm Exams",
+              midtermGrades: "Midterm Grade Entry Dates",
+              finals: "Final Exams",
+              finalGrades: "Final Exam Grade Entry Dates",
+              makeupExams: "Make-up Exams",
+              makeupGrades: "Make-up Exam Grade Entry Dates"
+            }
+          },
+          spring: {
+            title: "SPRING SEMESTER",
+            events: {
+              tuitionPayment: "Payment of 1st and 2nd Installments of Tuition Fee",
+              courseRegistration: "Course Registration",
+              advisorApproval: "Advisor Approval",
+              courseDates: "Course Start/End Dates",
+              addDrop: "Course Add/Drop, Late Course Registration and Course Registration Dates",
+              midterms: "Midterm Exams",
+              midtermGrades: "Midterm Grade Entry Dates",
+              finals: "Final Exams",
+              finalGrades: "Final Exam Grade Entry Dates",
+              makeupExams: "Make-up Exams",
+              makeupGrades: "Make-up Exam Grade Entry Dates"
+            }
+          },
+          additional: {
+            title: "Additional Exams and Important Dates",
+            items: {
+              singleCourse: {
+                title: "Graduation Single Course Exam"
+              },
+              finalSubmission: {
+                title: "Final Submission Date for Exam Results"
+              },
+              additionalExams: {
+                title: "Additional Exam Dates (For Students Who Have Completed Maximum Education Period)",
+                info: "(Exam application dates: August 18-22, 2025)"
+              }
+            }
           }
         }
       }
@@ -527,19 +660,222 @@ export const en = {
           placeholder: "Write your comment...",
           submit: "Comment",
           submitting: "Submitting...",
-          count: "{{count}} Comments"
+          count: "{{count}} Comments",
+          loading: "Loading comments...",
+          empty: "Be the first to comment",
+          delete: {
+            title: "Are You Sure You Want to Delete This Comment?",
+            description: "This action cannot be undone."
+          }
         }
       },
       errors: {
-        loadFailed: "Failed to load notes",
+        loadFailed: "Failed to load note",
         shareFailed: "Failed to share note",
         deleteFailed: "Failed to delete note",
-        commentFailed: "Failed to submit comment",
+        commentFailed: "An error occurred during the comment operation",
         requireLogin: "You must be logged in to comment",
         emptyComment: "Comment cannot be empty",
-        noPermission: "You don't have permission to delete this note",
+        noPermission: "You don't have permission for this action",
         selectFaculty: "Please select a faculty",
         selectDepartment: "Please select a department"
+      }
+    },
+    busRoutes: {
+      title: "Bus Routes",
+      subtitle: "Campus transportation lines and route information",
+      search: {
+        placeholder: "Search by line number or route...",
+        notFound: "No routes found matching your criteria."
+      },
+      routeCard: {
+        number: "Line Number",
+        direction: "Route Direction",
+        firstBus: "First Departure",
+        lastBus: "Last Departure",
+        frequency: "Service Frequency",
+        stops: "Stops",
+        showStops: "Show Stops",
+        hideStops: "Hide Stops",
+        minutes: "minutes"
+      },
+      filters: {
+        title: "Filters",
+        all: "All",
+        university: "University Lines",
+        central: "Central Lines",
+        reset: "Reset Filters"
+      },
+      hero: {
+        title: "Bus Routes",
+        subtitle: "Campus transportation lines and schedules"
+      },
+      map: {
+        title: "Route Map",
+        loading: "Loading map..."
+      },
+      stops: "Stops",
+      schedule: "Schedule",
+      routes: {
+        "4": {
+          name: "4 HIGH SCHOOL",
+          stops: {
+            center: "City Center",
+            ipekkoy: "Ipekkoy"
+          }
+        },
+        "6": {
+          name: "6 UNIVERSITY",
+          stops: {
+            center: "City Center",
+            university: "University"
+          }
+        }
+      }
+    },
+    events: {
+      title: "Events",
+      subtitle: "Campus events and activities",
+      filters: {
+        all: "All Events",
+        upcoming: "Upcoming Events",
+        past: "Past Events",
+        myEvents: "My Events",
+        search: "Search events...",
+        category: {
+          title: "Category",
+          all: "All Categories",
+          ACADEMIC: "Academic",
+          CULTURAL: "Cultural",
+          SPORTS: "Sports",
+          SOCIAL: "Social",
+          CAREER: "Career",
+          OTHER: "Other"
+        },
+        faculty: {
+          title: "Faculty",
+          all: "All Faculties"
+        },
+        date: {
+          title: "Date",
+          today: "Today",
+          tomorrow: "Tomorrow",
+          thisWeek: "This Week",
+          thisMonth: "This Month",
+          custom: "Custom Date"
+        }
+      },
+      create: {
+        title: "Create Event",
+        form: {
+          title: "Event Title",
+          titlePlaceholder: "Enter event title",
+          description: "Description",
+          descriptionPlaceholder: "Enter event description",
+          category: "Category",
+          faculty: "Faculty",
+          date: "Date",
+          startTime: "Start Time",
+          endTime: "End Time",
+          location: "Location",
+          locationPlaceholder: "Enter event location",
+          capacity: "Capacity",
+          capacityPlaceholder: "Enter participant capacity",
+          image: {
+            title: "Event Image",
+            description: "Upload an image for your event",
+            supportedFormats: "Supported formats: JPEG, PNG (max: 5MB)",
+            invalidFile: "Invalid file format or size too large (max: 5MB)"
+          },
+          submit: "Create Event",
+          submitting: "Creating..."
+        }
+      },
+      detail: {
+        notFound: "Event not found",
+        organizer: "Organizer",
+        date: "Date",
+        time: "Time",
+        location: "Location",
+        capacity: "Capacity",
+        participants: "Participants",
+        category: "Category",
+        faculty: "Faculty",
+        register: {
+          button: "Register for Event",
+          success: "Successfully registered for event",
+          alreadyRegistered: "You are already registered for this event",
+          capacityFull: "Event capacity is full",
+          login: "Please login to register for this event"
+        },
+        unregister: {
+          button: "Cancel Registration",
+          success: "Successfully cancelled registration",
+          confirm: {
+            title: "Cancel Registration",
+            description: "Are you sure you want to cancel your registration for this event?",
+            cancel: "No, Keep Registration",
+            confirm: "Yes, Cancel Registration"
+          }
+        },
+        delete: {
+          button: "Delete Event",
+          success: "Event successfully deleted",
+          confirm: {
+            title: "Delete Event",
+            description: "Are you sure you want to delete this event? This action cannot be undone.",
+            cancel: "No, Keep Event",
+            confirm: "Yes, Delete Event"
+          }
+        },
+        edit: {
+          button: "Edit Event",
+          title: "Edit Event",
+          success: "Event successfully updated"
+        },
+        share: {
+          title: "Share Event",
+          copied: "Event link copied to clipboard"
+        }
+      },
+      status: {
+        PENDING: "Pending Approval",
+        APPROVED: "Approved",
+        REJECTED: "Rejected",
+        CANCELLED: "Cancelled",
+        COMPLETED: "Completed"
+      },
+      admin: {
+        title: "Event Management",
+        subtitle: "Review and manage event submissions",
+        tabs: {
+          pending: "Pending",
+          approved: "Approved",
+          rejected: "Rejected"
+        },
+        approve: {
+          button: "Approve",
+          success: "Event approved successfully"
+        },
+        reject: {
+          button: "Reject",
+          success: "Event rejected successfully",
+          reason: {
+            title: "Rejection Reason",
+            placeholder: "Enter reason for rejection"
+          }
+        },
+        noEvents: "No events found"
+      },
+      errors: {
+        loadFailed: "Failed to load events",
+        createFailed: "Failed to create event",
+        updateFailed: "Failed to update event",
+        deleteFailed: "Failed to delete event",
+        registerFailed: "Failed to register for event",
+        unregisterFailed: "Failed to cancel registration",
+        requireLogin: "You must be logged in to perform this action",
+        noPermission: "You don't have permission for this action"
       }
     }
 };

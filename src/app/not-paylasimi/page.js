@@ -148,7 +148,7 @@ export default function NotesPage() {
       setPosts(data);
     } catch (error) {
       console.error("Posts fetch error:", error);
-      setError("Notlar yüklenirken bir hata oluştu");
+      setError(t("notes.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -168,7 +168,7 @@ export default function NotesPage() {
 
   const handleBookmark = async (postId) => {
     if (!session) {
-      setError("Kaydetmek için giriş yapmalısınız");
+      setError(t("notes.errors.requireLogin"));
       return;
     }
 
@@ -211,7 +211,7 @@ export default function NotesPage() {
     );
 
     if (invalidFiles.length > 0) {
-      setFileError("Geçersiz dosya formatı veya boyutu çok büyük (max: 10MB)");
+      setFileError(t("notes.share.form.files.invalidFile"));
       return;
     }
 
@@ -233,13 +233,13 @@ export default function NotesPage() {
 
     // Fakülte ve bölüm kontrolü
     if (!selectedFaculty) {
-      setError("Lütfen bir fakülte seçin");
+      setError(t("notes.errors.selectFaculty"));
       setLoading(false);
       return;
     }
 
     if (!selectedDepartment) {
-      setError("Lütfen bir bölüm seçin");
+      setError(t("notes.errors.selectDepartment"));
       setLoading(false);
       return;
     }
@@ -419,11 +419,13 @@ export default function NotesPage() {
               </SelectContent>
             </Select>
 
-            <Input
-              placeholder={t('notes.filters.search')}
-              value={filters.search}
-              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-            />
+            <div className="flex items-center space-x-4">
+              <Input
+                placeholder={t("notes.filters.search")}
+                value={filters.search}
+                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              />
+            </div>
           </div>
 
           <div className="flex justify-between items-center">
@@ -465,7 +467,7 @@ export default function NotesPage() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{t('notes.share.title')}</DialogTitle>
+                  <DialogTitle>{t("notes.share.title")}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
@@ -476,7 +478,7 @@ export default function NotesPage() {
                       id="title"
                       name="title"
                       required
-                      placeholder={t('notes.share.form.titlePlaceholder')}
+                      placeholder={t("notes.share.form.titlePlaceholder")}
                     />
                   </div>
 
@@ -495,7 +497,7 @@ export default function NotesPage() {
                         required
                       >
                         <SelectTrigger id="faculty">
-                          <SelectValue placeholder={t('notes.filters.faculty')} />
+                          <SelectValue placeholder={t("notes.filters.faculty")} />
                         </SelectTrigger>
                         <SelectContent>
                           {Object.keys(FACULTIES).map((faculty) => (
@@ -520,7 +522,7 @@ export default function NotesPage() {
                         required
                       >
                         <SelectTrigger id="department">
-                          <SelectValue placeholder={t('notes.filters.department')} />
+                          <SelectValue placeholder={t("notes.filters.department")} />
                         </SelectTrigger>
                         <SelectContent>
                           {availableDepartments.map((department) => (
@@ -543,13 +545,13 @@ export default function NotesPage() {
                       required
                     >
                       <SelectTrigger id="category">
-                        <SelectValue placeholder={t('notes.filters.category')} />
+                        <SelectValue placeholder={t("notes.filters.category")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="DERS_NOTU">{t('notes.categories.DERS_NOTU')}</SelectItem>
-                        <SelectItem value="SINAV_NOTU">{t('notes.categories.SINAV_NOTU')}</SelectItem>
-                        <SelectItem value="OZET">{t('notes.categories.OZET')}</SelectItem>
-                        <SelectItem value="KAYNAK">{t('notes.categories.KAYNAK')}</SelectItem>
+                        <SelectItem value="DERS_NOTU">{t("notes.categories.DERS_NOTU")}</SelectItem>
+                        <SelectItem value="SINAV_NOTU">{t("notes.categories.SINAV_NOTU")}</SelectItem>
+                        <SelectItem value="OZET">{t("notes.categories.OZET")}</SelectItem>
+                        <SelectItem value="KAYNAK">{t("notes.categories.KAYNAK")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -562,7 +564,7 @@ export default function NotesPage() {
                       id="content"
                       name="content"
                       required
-                      placeholder={t('notes.share.form.contentPlaceholder')}
+                      placeholder={t("notes.share.form.contentPlaceholder")}
                       rows={5}
                     />
                   </div>
@@ -577,10 +579,10 @@ export default function NotesPage() {
                         className="mb-2"
                       />
                       <p className="text-xs text-theme-text-muted">
-                        {t('notes.share.form.files.supportedFormats')}
+                        {t("notes.share.form.files.title")}
                       </p>
                       {fileError && (
-                        <p className="text-red-500 text-sm mt-1">{t('notes.share.form.files.invalidFile')}</p>
+                        <p className="text-red-500 text-sm mt-1">{fileError}</p>
                       )}
                       {selectedFiles.length > 0 && (
                         <div className="mt-4 space-y-2">
@@ -610,7 +612,7 @@ export default function NotesPage() {
                       className="w-full bg-theme-primary hover:bg-theme-primary-hover text-white transition-colors"
                       disabled={loading}
                     >
-                      {loading ? t('notes.share.form.submitting') : t('notes.share.form.submit')}
+                      {loading ? t("notes.share.form.submitting") : t("notes.share.form.submit")}
                     </Button>
                   </div>
                 </form>
@@ -662,7 +664,7 @@ export default function NotesPage() {
             <div className="text-center py-8">
               <div className="flex flex-col items-center gap-4 text-theme-text-muted">
                 <BookCopy className="w-12 h-12 opacity-50" />
-                <p>Henüz not paylaşılmamış</p>
+                <p>{t("notes.detail.notFound")}</p>
               </div>
             </div>
           ) : (
