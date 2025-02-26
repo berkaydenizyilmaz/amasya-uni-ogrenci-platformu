@@ -5,14 +5,12 @@ import dynamic from 'next/dynamic';
 import Header from "@/components/header";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { t } from "@/lib/i18n";
-import L from 'leaflet';
 
 // Haritayı client-side'da yükle
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
+    <div className="w-full h-full min-h-[500px] bg-gray-100 rounded-lg flex items-center justify-center">
       <div className="text-gray-500">Harita yükleniyor...</div>
     </div>
   ),
@@ -67,81 +65,92 @@ const routes = {
  */
 export default function BusRoutesPage() {
   const [selectedRoute, setSelectedRoute] = useState("4");
-  const [mapKey, setMapKey] = useState(0); // Her sekme değişiminde haritayı yeniden yüklemek için
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleRouteChange = (value) => {
     setSelectedRoute(value);
-    setMapKey(prev => prev + 1); // Haritayı yeniden yükle
   };
 
   return (
     <main className="min-h-screen bg-theme-bg">
       <Header />
       
-      <div className="container mx-auto p-4 space-y-4">
-        <h1 className="text-2xl font-bold">Otobüs Güzergahları</h1>
-        
-        <Tabs defaultValue="4" onValueChange={handleRouteChange}>
-          <TabsList>
-            <TabsTrigger value="4">4 Numaralı Hat</TabsTrigger>
-            <TabsTrigger value="6">6 Numaralı Hat</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="4">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">{routes['4'].name}</h2>
-              <div className="h-[500px]">
-                <Map key={mapKey} route={routes['4']} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card className="p-4">
-                  <h3 className="font-semibold mb-2">Duraklar:</h3>
-                  <ul className="list-disc list-inside space-y-1">
-                    {routes['4'].stops.map((stop, index) => (
-                      <li key={index}>{stop.name}</li>
-                    ))}
-                  </ul>
-                </Card>
-                <Card className="p-4">
-                  <h3 className="font-semibold mb-2">Sefer Saatleri:</h3>
-                  <div className="grid grid-cols-4 gap-2">
-                    {routes['4'].schedule.map((time, index) => (
-                      <div key={index} className="text-sm">{time}</div>
-                    ))}
+      {/* Hero Section */}
+      <section className="relative h-[40vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-theme-primary to-theme-primary-hover opacity-90" />
+        </div>
+        <div className="relative text-center px-4">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-theme-bg">
+            Otobüs Güzergahları
+          </h1>
+          <p className="text-xl md:text-2xl text-theme-bg/90 max-w-3xl mx-auto">
+            Kampüs ulaşım hatları ve sefer saatleri
+          </p>
+        </div>
+      </section>
+
+      {/* İçerik */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Güzergah Listesi */}
+            <div className="lg:col-span-1 space-y-4">
+              {Object.entries(routes).map(([id, route]) => (
+                <Card 
+                  key={id} 
+                  className={`cursor-pointer transition-all hover:shadow-lg ${
+                    selectedRoute === id 
+                      ? 'border-theme-primary bg-theme-primary/5' 
+                      : 'border-theme-primary/20 hover:border-theme-primary'
+                  }`}
+                  onClick={() => handleRouteChange(id)}
+                >
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-4">{route.name}</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-medium mb-2">Duraklar:</h4>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500" />
+                            <span>{route.stops[0].name}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-red-500" />
+                            <span>{route.stops[route.stops.length - 1].name}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="font-medium mb-2">Sefer Saatleri:</h4>
+                        <div className="grid grid-cols-4 gap-2">
+                          {route.schedule.map((time, index) => (
+                            <div key={index} className="text-sm">{time}</div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </Card>
-              </div>
+              ))}
             </div>
-          </TabsContent>
-          
-          <TabsContent value="6">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">{routes['6'].name}</h2>
-              <div className="h-[500px]">
-                <Map key={mapKey} route={routes['6']} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card className="p-4">
-                  <h3 className="font-semibold mb-2">Duraklar:</h3>
-                  <ul className="list-disc list-inside space-y-1">
-                    {routes['6'].stops.map((stop, index) => (
-                      <li key={index}>{stop.name}</li>
-                    ))}
-                  </ul>
-                </Card>
-                <Card className="p-4">
-                  <h3 className="font-semibold mb-2">Sefer Saatleri:</h3>
-                  <div className="grid grid-cols-4 gap-2">
-                    {routes['6'].schedule.map((time, index) => (
-                      <div key={index} className="text-sm">{time}</div>
-                    ))}
-                  </div>
-                </Card>
-              </div>
+
+            {/* Harita */}
+            <div className="lg:col-span-2">
+              <Card className="overflow-hidden">
+                {isMounted && (
+                  <Map route={routes[selectedRoute]} />
+                )}
+              </Card>
             </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 } 
