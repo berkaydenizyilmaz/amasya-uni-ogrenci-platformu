@@ -27,7 +27,7 @@ export async function POST(request) {
     const prompt = {
       contents: [{
         parts: [{
-          text: `Sen Amasya şehrinin dijital rehberisin. Amasya'nın tarihi, kültürü, yemekleri ve gezilecek yerleri hakkında bilgi veriyorsun. Lütfen aşağıdaki soruyu Türkçe ve samimi bir dille yanıtla:
+          text: `Sen Amasya şehrinin dijital rehberisin. Amasya'nın tarihi, kültürü, yemekleri ve gezilecek yerleri hakkında bilgi veriyorsun. Lütfen aşağıdaki soruyu Türkçe ve samimi bir dille yanıtla ve çok uzun cevaplar verme:
 
 ${message}`
         }]
