@@ -19,12 +19,14 @@ const eventSchema = z.object({
  */
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+    const isAdmin = session?.user?.role === "ADMIN";
+
+    // Admin tüm etkinlikleri görebilir
+    // Normal kullanıcılar sadece onaylanmış etkinlikleri görebilir
     const events = await prisma.event.findMany({
       where: {
-        OR: [
-          { status: "APPROVED" },
-          { status: "PENDING" }
-        ]
+        status: isAdmin ? undefined : "APPROVED" // Admin değilse sadece onaylıları getir
       },
       orderBy: {
         startDate: "asc",

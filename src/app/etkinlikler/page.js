@@ -26,7 +26,9 @@ export default function EventsPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +38,50 @@ export default function EventsPage() {
     category: "ALL",
     search: "",
   });
+
+  // Tarih formatını düzenle
+  const formatDateForInput = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  // Varsayılan değerleri ayarla
+  useEffect(() => {
+    const now = new Date();
+    const oneHourLater = new Date(now);
+    oneHourLater.setHours(now.getHours() + 1);
+
+    // Tarih formatı: YYYY-MM-DD
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    // Saat formatı: HH:mm
+    const formatTime = (date) => {
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+    };
+
+    setStartDate(formatDate(now));
+    setStartTime(formatTime(now));
+    setEndDate(formatDate(oneHourLater));
+    setEndTime(formatTime(oneHourLater));
+  }, []);
+
+  // Tarih ve saati birleştir
+  const combineDateTimeForSubmit = (date, time) => {
+    if (!date || !time) return null;
+    return new Date(`${date}T${time}`).toISOString();
+  };
 
   // Etkinlikleri getir
   const fetchEvents = async () => {
@@ -60,11 +106,20 @@ export default function EventsPage() {
     fetchEvents();
   }, []);
 
-  // Etkinlik paylaş
+  // Form gönderme
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     setError("");
+
+    const startDateTime = combineDateTimeForSubmit(startDate, startTime);
+    const endDateTime = combineDateTimeForSubmit(endDate, endTime);
+
+    if (!startDateTime || !endDateTime) {
+      setError("Lütfen tarih ve saat alanlarını doldurun");
+      setSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch("/api/events", {
@@ -75,8 +130,8 @@ export default function EventsPage() {
         body: JSON.stringify({
           title,
           description,
-          startDate,
-          endDate,
+          startDate: startDateTime,
+          endDate: endDateTime,
           location,
           category,
         }),
@@ -92,7 +147,9 @@ export default function EventsPage() {
       setTitle("");
       setDescription("");
       setStartDate("");
+      setStartTime("");
       setEndDate("");
+      setEndTime("");
       setLocation("");
       setCategory("");
       setIsDialogOpen(false);
@@ -242,30 +299,60 @@ export default function EventsPage() {
 
                       <div className="space-y-2">
                         <label htmlFor="startDate" className="text-sm font-medium">
-                          Başlangıç Tarihi
+                          Başlangıç Tarihi ve Saati
                         </label>
-                        <Input
-                          id="startDate"
-                          type="datetime-local"
-                          value={startDate}
-                          onChange={(e) => setStartDate(e.target.value)}
-                          required
-                          className="border-theme-primary/20"
-                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input
+                            id="startDate"
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => {
+                              setStartDate(e.target.value);
+                              if ((!endDate || endDate < e.target.value)) {
+                                setEndDate(e.target.value);
+                              }
+                            }}
+                            min={new Date().toISOString().split('T')[0]}
+                            required
+                            className="border-theme-primary/20"
+                          />
+                          <Input
+                            id="startTime"
+                            type="time"
+                            value={startTime}
+                            onChange={(e) => {
+                              setStartTime(e.target.value);
+                              if (!endTime) setEndTime(e.target.value);
+                            }}
+                            required
+                            className="border-theme-primary/20"
+                          />
+                        </div>
                       </div>
 
                       <div className="space-y-2">
                         <label htmlFor="endDate" className="text-sm font-medium">
-                          Bitiş Tarihi
+                          Bitiş Tarihi ve Saati
                         </label>
-                        <Input
-                          id="endDate"
-                          type="datetime-local"
-                          value={endDate}
-                          onChange={(e) => setEndDate(e.target.value)}
-                          required
-                          className="border-theme-primary/20"
-                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input
+                            id="endDate"
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            min={startDate || new Date().toISOString().split('T')[0]}
+                            required
+                            className="border-theme-primary/20"
+                          />
+                          <Input
+                            id="endTime"
+                            type="time"
+                            value={endTime}
+                            onChange={(e) => setEndTime(e.target.value)}
+                            required
+                            className="border-theme-primary/20"
+                          />
+                        </div>
                       </div>
 
                       <div className="space-y-2">

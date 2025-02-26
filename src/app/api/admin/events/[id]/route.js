@@ -29,6 +29,18 @@ export async function PATCH(request, { params }) {
       );
     }
 
+    if (status === "REJECTED") {
+      // Etkinliği sil
+      await prisma.event.delete({
+        where: {
+          id: params.id,
+        },
+      });
+
+      return NextResponse.json({ message: "Etkinlik reddedildi ve silindi" });
+    }
+
+    // Etkinliği onayla
     const event = await prisma.event.update({
       where: {
         id: params.id,
