@@ -307,5 +307,166 @@ export const en = {
         male: "MALE",
         female: "FEMALE"
       }
+    },
+    historicalPlaces: {
+      title: "Historical Places",
+      subtitle: "Unique Historical Heritage of Amasya",
+      period: {
+        ancient: "Ancient Period",
+        ottoman: "Ottoman Period",
+        seljuk: "Seljuk Period"
+      },
+      places: {
+        pontusRoyalTombs: {
+          title: "Pontus Royal Rock Tombs",
+          period: "4th Century BC",
+          description: "Rising on the steep cliffs overlooking the Yeşilırmak valley of Amasya, the Pontus Royal Rock Tombs are among the most magnificent structures of the city with a history dating back approximately 2300 years. Built during the Kingdom of Pontus in the 4th century BC, these tombs have survived to the present day as monumental works belonging to the kings of the period.\n\nThese massive tombs carved into the rocks are not only a historical heritage but also an aesthetic element that crowns the natural beauty of Amasya. With evening illuminations, it creates a mesmerizing view along the banks of Yeşilırmak, adding a mystical atmosphere to the city. These unique structures, where history and nature intertwine, are one of the most important elements completing the cultural texture of Amasya.",
+          highlights: [
+            "2300 years of history",
+            "Monumental structure carved into rocks",
+            "Night illumination",
+            "Yeşilırmak view"
+          ]
+        },
+        amasyaCastle: {
+          title: "Amasya Castle (Harşena Castle)",
+          period: "Hittites - Persians - Kingdom of Pontus - Ottoman",
+          description: "Rising in a position overlooking the Yeşilırmak Valley, Amasya Castle (Harşena Castle) is one of the most important historical structures of the city with its thousands of years of history. Thanks to its strategic location, the castle, which came under the rule of many civilizations from the Hittites to the Persians, from the Kingdom of Pontus to the Ottoman Empire, gained great importance especially during the Kingdom of Pontus period. This magnificent structure, which takes its name from Harşena, the commander of the Pontus King Mithridates, was also used for defense during the Ottoman period.\n\nHarşena Castle is fascinating not only with its historical value but also with its unique view it adds to the city. Looking from its peak, Yeşilırmak, Pontus Royal Rock Tombs, and the historical houses of Amasya reveal themselves in perfect harmony. The castle and its surroundings, turning golden at sunset, create a unique silhouette that crowns the natural and cultural beauty of Amasya.",
+          highlights: [
+            "Hittites - Persians - Kingdom of Pontus - Ottoman",
+            "Strategic location",
+            "Magnificent view",
+            "Unique structure where history and nature intertwine"
+          ]
+        },
+        bayezidComplex: {
+          title: "Bayezid II Complex",
+          period: "1485-1486",
+          description: "The Amasya Bayezid II Complex, built between 1485-1486 by Ottoman Sultan Bayezid II, is one of the most important Ottoman works in the city. This magnificent structure, consisting of a mosque, madrasah, soup kitchen, and library, stands out with its aesthetic details reflecting the architectural elegance of the period. Especially its simple and balanced architecture, combined with the peaceful atmosphere in the interior, offers visitors a journey through history.\n\nLocated on the banks of Yeşilırmak, the complex adds a distinct beauty to Amasya's silhouette with its elegance and historical texture. Especially the two elegant minarets of the mosque and the delicacy in stonework appear as one of the finest examples of Ottoman art. With the play of light changing at different times of the day, the complex continues its existence as a unique structure complementing the historical and natural beauty of Amasya.",
+          highlights: [
+            "1485-1486",
+            "Built by Ottoman Sultan Bayezid II",
+            "Magnificent structure consisting of mosque, madrasah, soup kitchen, and library",
+            "Unique structure where history and nature intertwine"
+          ]
+        },
+        hazeranlarMansion: {
+          title: "Hazeranlar Mansion",
+          period: "19th Century",
+          description: "Located on the banks of Yeşilırmak, Hazeranlar Mansion, one of the most beautiful examples of historical Yalıboyu Houses, was built by Defterdar Hasan Talat Efendi in the 19th century. This structure, reflecting the elegance of Ottoman civil architecture, takes its name from Hazeran Hanım who lived here. The mansion, dazzling with its woodwork, large courtyard, and symmetrical architecture, is an important cultural heritage carrying traces of the past to the present.\n\nHazeranlar Mansion, now used as a museum and art gallery, is among the structures reflecting the aesthetic spirit of Amasya. The perfect harmony of Yeşilırmak and historical texture offers visitors both a visual feast and provides clues about daily life during the Ottoman period. Especially with night illuminations, the mansion adds a nostalgic and elegant beauty to the city's silhouette.",
+          highlights: [
+            "19th Century",
+            "Built by Defterdar Hasan Talat Efendi",
+            "Structure reflecting the elegance of Ottoman civil architecture",
+            "Night illumination"
+          ]
+        },
+        ferhatSirinWaterways: {
+          title: "Ferhad and Shirin Waterways",
+          period: "Legend",
+          description: "The Ferhad and Shirin Waterways, one of the most romantic and legendary structures of Amasya, bears traces of a great love story passed down from generation to generation. According to legend, an engraver named Ferhad falls in love with Shirin, the daughter of the Sultan of Amasya. However, the Sultan opposes this love and sets a condition for Ferhad to pierce the mountains and bring water to the city to reach Shirin. While Ferhad, working with great love, pierces the mountains with chisel and hammer, he receives false news that Shirin has died and, unable to bear this pain, ends his life.\n\nThe Ferhad Waterways, still visible today, contribute to the historical texture of Amasya not only as an engineering marvel but also as a symbol of love and perseverance. This ancient waterway passing through the mountains integrates with the natural beauties of the city, offering visitors both a romantic and mystical atmosphere. These channels, shaped by Ferhad's love and effort, are among the most special structures adding meaning to Amasya's history adorned with legends.",
+          highlights: [
+            "Legend",
+            "One of the most romantic and legendary structures of Amasya",
+            "Love story",
+            "Ancient waterway passing through mountains"
+          ]
+        }
+      }
+    },
+    localFood: {
+      title: "Local Cuisine",
+      subtitle: "Unique Cuisine of Amasya",
+      tabs: {
+        mainDishes: "Main Dishes",
+        desserts: "Desserts"
+      },
+      details: {
+        ingredients: "Ingredients",
+        prepTime: "Preparation Time",
+        difficulty: "Difficulty",
+        servings: "Servings",
+        minutes: "minutes"
+      },
+      difficulty: {
+        easy: "Easy",
+        medium: "Medium",
+        hard: "Hard"
+      },
+      dishes: {
+        keskek: {
+          name: "Keşkek",
+          description: "Keşkek, one of the most famous dishes of Amasya, is a traditional dish made with cracked wheat and meat, prepared for weddings and special occasions.",
+          ingredients: [
+            "Cracked wheat",
+            "Lamb meat",
+            "Butter",
+            "Salt",
+            "Black pepper"
+          ],
+          preparationTime: "3-4 hours",
+          difficulty: "Medium",
+          servings: "Serves 6-8"
+        },
+        baklaDolmasi: {
+          name: "Bakla Dolması",
+          description: "A traditional Amasya dish made by stuffing fresh broad beans with a filling prepared with rice, onions, and various spices.",
+          ingredients: [
+            "Fresh broad beans",
+            "Rice",
+            "Onion",
+            "Parsley",
+            "Olive oil",
+            "Spices"
+          ],
+          preparationTime: "1 hour",
+          difficulty: "Medium",
+          servings: "Serves 4-6"
+        },
+        catalAsi: {
+          name: "Çatal Aşı",
+          description: "A type of mantı unique to Amasya, prepared by pouring minced meat sauce and yogurt over pieces of phyllo dough.",
+          ingredients: [
+            "Phyllo dough",
+            "Ground meat",
+            "Onion",
+            "Yogurt",
+            "Butter",
+            "Spices"
+          ],
+          preparationTime: "45 minutes",
+          difficulty: "Easy",
+          servings: "Serves 4"
+        }
+      },
+      desserts: {
+        cicekBamyasi: {
+          name: "Amasya Çiçek Bamyası",
+          description: "One of Amasya's famous dessert varieties, made by sweetening dried okra with syrup.",
+          ingredients: [
+            "Dried flower okra",
+            "Sugar",
+            "Water",
+            "Lemon"
+          ],
+          preparationTime: "30 minutes",
+          difficulty: "Easy",
+          servings: "Serves 4-6"
+        },
+        elmaTatlisi: {
+          name: "Amasya Apple Dessert",
+          description: "A syrupy dessert made using Amasya's world-famous apples.",
+          ingredients: [
+            "Amasya apple",
+            "Sugar",
+            "Water",
+            "Cinnamon",
+            "Walnut kernels"
+          ],
+          preparationTime: "40 minutes",
+          difficulty: "Easy",
+          servings: "Serves 6"
+        }
+      }
     }
 };
