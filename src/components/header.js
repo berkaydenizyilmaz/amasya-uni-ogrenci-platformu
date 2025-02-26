@@ -252,7 +252,7 @@ export default function Header() {
                     <div className="flex flex-col gap-2">
                       <div className="font-medium">Admin</div>
                       <Link href="/admin/etkinlikler" className="flex items-center gap-2 px-4 py-2 text-sm rounded-md hover:bg-theme-primary/10">
-                        Etkinlik Yönetimi
+                        {t('common.menu.eventManagement')}
                       </Link>
                     </div>
                   )}
@@ -322,13 +322,13 @@ export default function Header() {
                         variant="ghost" 
                         className="w-full justify-start px-4 py-2.5 text-theme-text hover:bg-theme-primary/10"
                       >
-                        <Link href="/giris">Giriş Yap</Link>
+                        <Link href="/giris">{t('common.auth.login')}</Link>
                       </Button>
                       <Button 
                         asChild 
                         className="w-full justify-start px-4 py-2.5 bg-theme-primary text-theme-bg hover:bg-theme-primary-hover"
                       >
-                        <Link href="/kayit">Kayıt Ol</Link>
+                        <Link href="/kayit">{t('common.auth.register')}</Link>
                       </Button>
                     </div>
                   )}
@@ -370,13 +370,13 @@ export default function Header() {
                   variant="ghost" 
                   className="h-9 px-3 text-theme-text hover:bg-theme-primary/10 hover:text-theme-primary-hover transition-colors"
                 >
-                  <Link href="/giris">Giriş Yap</Link>
+                  <Link href="/giris">{t('common.auth.login')}</Link>
                 </Button>
                 <Button 
                   asChild 
                   className="h-9 px-3 bg-theme-primary text-theme-bg hover:bg-theme-primary-hover transition-colors"
                 >
-                  <Link href="/kayit">Kayıt Ol</Link>
+                  <Link href="/kayit">{t('common.auth.register')}</Link>
                 </Button>
               </div>
             )}

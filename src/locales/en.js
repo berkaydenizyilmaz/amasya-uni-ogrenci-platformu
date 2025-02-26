@@ -26,7 +26,14 @@ export const en = {
         tourRoutes: "Tour Routes",
         tourRoutesDesc: "Recommended tour routes",
         localFood: "Local Cuisine",
-        localFoodDesc: "Unique cuisine of Amasya"
+        localFoodDesc: "Unique cuisine of Amasya",
+        eventManagement: "Event Management",
+        navigation: "Navigation"
+      },
+      auth: {
+        login: "Login",
+        register: "Register",
+        logout: "Logout"
       },
       buttons: {
         explore: "Explore Our University",
@@ -467,6 +474,72 @@ export const en = {
           difficulty: "Easy",
           servings: "Serves 6"
         }
+      }
+    },
+    notes: {
+      title: "Note Sharing",
+      filters: {
+        faculty: "Select Faculty",
+        department: "Select Department",
+        category: "Select Category",
+        search: "Search...",
+        clearAll: "Clear Filters",
+        bookmarked: "Bookmarked",
+        allNotes: "All Notes"
+      },
+      categories: {
+        DERS_NOTU: "Lecture Note",
+        SINAV_NOTU: "Exam Note",
+        OZET: "Summary",
+        KAYNAK: "Resource"
+      },
+      share: {
+        button: "Share Note",
+        title: "Share Note",
+        form: {
+          title: "Title",
+          titlePlaceholder: "Note title",
+          faculty: "Faculty",
+          department: "Department",
+          category: "Category",
+          content: "Content",
+          contentPlaceholder: "Note content",
+          files: {
+            title: "Files",
+            supportedFormats: "Supported formats: PDF, Word, Excel, PowerPoint, JPEG, PNG (max: 10MB)",
+            invalidFile: "Invalid file format or size too large (max: 10MB)"
+          },
+          submit: "Share",
+          submitting: "Sharing..."
+        }
+      },
+      detail: {
+        notFound: "Note not found",
+        delete: {
+          title: "Are You Sure You Want to Delete This Note?",
+          description: "This action cannot be undone. The note and all related comments will be permanently deleted.",
+          cancel: "Cancel",
+          confirm: "Delete"
+        },
+        files: "Files",
+        comments: {
+          title: "Comments",
+          placeholder: "Write your comment...",
+          submit: "Comment",
+          submitting: "Submitting...",
+          count: "{{count}} Comments"
+        }
+      },
+      errors: {
+        loadFailed: "Failed to load notes",
+        shareFailed: "Failed to share note",
+        deleteFailed: "Failed to delete note",
+        commentFailed: "Failed to submit comment",
+        requireLogin: "You must be logged in to comment",
+        emptyComment: "Comment cannot be empty",
+        noPermission: "You don't have permission to delete this note",
+        selectFaculty: "Please select a faculty",
+        selectDepartment: "Please select a department"
       }
     }
 };

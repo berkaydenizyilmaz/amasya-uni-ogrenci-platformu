@@ -354,13 +354,7 @@ export default function NotesPage() {
   }, [session]);
 
   const getCategoryLabel = (category) => {
-    const categories = {
-      DERS_NOTU: "Ders Notu",
-      SINAV_NOTU: "Sınav Notu",
-      OZET: "Özet",
-      KAYNAK: "Kaynak"
-    };
-    return categories[category] || category;
+    return t(`notes.categories.${category}`);
   };
 
   if (!mounted) {
@@ -382,7 +376,7 @@ export default function NotesPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Select value={filters.faculty} onValueChange={handleFacultyChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Fakülte seçin" />
+                <SelectValue placeholder={t('notes.filters.faculty')} />
               </SelectTrigger>
               <SelectContent>
                 {Object.keys(FACULTIES).map((faculty) => (
@@ -399,7 +393,7 @@ export default function NotesPage() {
               disabled={!filters.faculty}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Bölüm seçin" />
+                <SelectValue placeholder={t('notes.filters.department')} />
               </SelectTrigger>
               <SelectContent>
                 {availableDepartments.map(dept => (
@@ -415,18 +409,18 @@ export default function NotesPage() {
               onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Kategori seçin" />
+                <SelectValue placeholder={t('notes.filters.category')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="DERS_NOTU">Ders Notu</SelectItem>
-                <SelectItem value="SINAV_NOTU">Sınav Notu</SelectItem>
-                <SelectItem value="OZET">Özet</SelectItem>
-                <SelectItem value="KAYNAK">Kaynak</SelectItem>
+                <SelectItem value="DERS_NOTU">{t('notes.categories.DERS_NOTU')}</SelectItem>
+                <SelectItem value="SINAV_NOTU">{t('notes.categories.SINAV_NOTU')}</SelectItem>
+                <SelectItem value="OZET">{t('notes.categories.OZET')}</SelectItem>
+                <SelectItem value="KAYNAK">{t('notes.categories.KAYNAK')}</SelectItem>
               </SelectContent>
             </Select>
 
             <Input
-              placeholder="Ara..."
+              placeholder={t('notes.filters.search')}
               value={filters.search}
               onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
             />
@@ -440,7 +434,7 @@ export default function NotesPage() {
                 className="flex items-center gap-2"
               >
                 {showBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-                {showBookmarked ? "Tüm Notlar" : "Kaydedilenler"}
+                {showBookmarked ? t('notes.filters.allNotes') : t('notes.filters.bookmarked')}
               </Button>
 
               <Button
@@ -458,7 +452,7 @@ export default function NotesPage() {
                 className="flex items-center gap-2"
               >
                 <X className="w-4 h-4" />
-                Filtreleri Temizle
+                {t('notes.filters.clearAll')}
               </Button>
             </div>
 
@@ -466,30 +460,30 @@ export default function NotesPage() {
               <DialogTrigger asChild>
                 <Button className="bg-theme-primary hover:bg-theme-primary-hover text-white flex items-center gap-2">
                   <PlusCircle className="w-4 h-4" />
-                  Not Paylaş
+                  {t('notes.share.button')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Not Paylaş</DialogTitle>
+                  <DialogTitle>{t('notes.share.title')}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <label htmlFor="title" className="text-sm font-medium">
-                      Başlık
+                      {t('notes.share.form.title')}
                     </label>
                     <Input
                       id="title"
                       name="title"
                       required
-                      placeholder="Not başlığı"
+                      placeholder={t('notes.share.form.titlePlaceholder')}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label htmlFor="faculty" className="text-sm font-medium">
-                        Fakülte
+                        {t('notes.share.form.faculty')}
                       </label>
                       <Select 
                         value={selectedFaculty}
@@ -501,7 +495,7 @@ export default function NotesPage() {
                         required
                       >
                         <SelectTrigger id="faculty">
-                          <SelectValue placeholder="Fakülte seçin" />
+                          <SelectValue placeholder={t('notes.filters.faculty')} />
                         </SelectTrigger>
                         <SelectContent>
                           {Object.keys(FACULTIES).map((faculty) => (
@@ -515,7 +509,7 @@ export default function NotesPage() {
 
                     <div className="space-y-2">
                       <label htmlFor="department" className="text-sm font-medium">
-                        Bölüm
+                        {t('notes.share.form.department')}
                       </label>
                       <Select 
                         value={selectedDepartment}
@@ -526,7 +520,7 @@ export default function NotesPage() {
                         required
                       >
                         <SelectTrigger id="department">
-                          <SelectValue placeholder="Bölüm seçin" />
+                          <SelectValue placeholder={t('notes.filters.department')} />
                         </SelectTrigger>
                         <SelectContent>
                           {availableDepartments.map((department) => (
@@ -541,7 +535,7 @@ export default function NotesPage() {
 
                   <div className="space-y-2">
                     <label htmlFor="category" className="text-sm font-medium">
-                      Kategori
+                      {t('notes.share.form.category')}
                     </label>
                     <Select 
                       value={selectedCategory}
@@ -549,26 +543,26 @@ export default function NotesPage() {
                       required
                     >
                       <SelectTrigger id="category">
-                        <SelectValue placeholder="Kategori seçin" />
+                        <SelectValue placeholder={t('notes.filters.category')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="DERS_NOTU">Ders Notu</SelectItem>
-                        <SelectItem value="SINAV_NOTU">Sınav Notu</SelectItem>
-                        <SelectItem value="OZET">Özet</SelectItem>
-                        <SelectItem value="KAYNAK">Kaynak</SelectItem>
+                        <SelectItem value="DERS_NOTU">{t('notes.categories.DERS_NOTU')}</SelectItem>
+                        <SelectItem value="SINAV_NOTU">{t('notes.categories.SINAV_NOTU')}</SelectItem>
+                        <SelectItem value="OZET">{t('notes.categories.OZET')}</SelectItem>
+                        <SelectItem value="KAYNAK">{t('notes.categories.KAYNAK')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
                     <label htmlFor="content" className="text-sm font-medium">
-                      İçerik
+                      {t('notes.share.form.content')}
                     </label>
                     <Textarea
                       id="content"
                       name="content"
                       required
-                      placeholder="Not içeriği"
+                      placeholder={t('notes.share.form.contentPlaceholder')}
                       rows={5}
                     />
                   </div>
@@ -583,10 +577,10 @@ export default function NotesPage() {
                         className="mb-2"
                       />
                       <p className="text-xs text-theme-text-muted">
-                        Desteklenen formatlar: PDF, Word, Excel, PowerPoint, JPEG, PNG (max: 10MB)
+                        {t('notes.share.form.files.supportedFormats')}
                       </p>
                       {fileError && (
-                        <p className="text-red-500 text-sm mt-1">{fileError}</p>
+                        <p className="text-red-500 text-sm mt-1">{t('notes.share.form.files.invalidFile')}</p>
                       )}
                       {selectedFiles.length > 0 && (
                         <div className="mt-4 space-y-2">
@@ -616,7 +610,7 @@ export default function NotesPage() {
                       className="w-full bg-theme-primary hover:bg-theme-primary-hover text-white transition-colors"
                       disabled={loading}
                     >
-                      {loading ? "Paylaşılıyor..." : "Paylaş"}
+                      {loading ? t('notes.share.form.submitting') : t('notes.share.form.submit')}
                     </Button>
                   </div>
                 </form>

@@ -26,7 +26,13 @@ export const tr = {
       tourRoutes: "Gezi Rotaları",
       tourRoutesDesc: "Önerilen gezi güzergahları",
       localFood: "Yöresel Lezzetler",
-      localFoodDesc: "Amasya'nın eşsiz mutfağı"
+      localFoodDesc: "Amasya'nın eşsiz mutfağı",
+      eventManagement: "Etkinlik Yönetimi"
+    },
+    auth: {
+      login: "Giriş Yap",
+      register: "Kayıt Ol",
+      logout: "Çıkış Yap"
     },
     buttons: {
       explore: "Üniversitemizi Keşfet",
@@ -425,6 +431,72 @@ export const tr = {
         difficulty: "Kolay",
         servings: "6 kişilik"
       }
+    }
+  },
+  notes: {
+    title: "Not Paylaşımı",
+    filters: {
+      faculty: "Fakülte seçin",
+      department: "Bölüm seçin",
+      category: "Kategori seçin",
+      search: "Ara...",
+      clearAll: "Filtreleri Temizle",
+      bookmarked: "Kaydedilenler",
+      allNotes: "Tüm Notlar"
+    },
+    categories: {
+      DERS_NOTU: "Ders Notu",
+      SINAV_NOTU: "Sınav Notu",
+      OZET: "Özet",
+      KAYNAK: "Kaynak"
+    },
+    share: {
+      button: "Not Paylaş",
+      title: "Not Paylaş",
+      form: {
+        title: "Başlık",
+        titlePlaceholder: "Not başlığı",
+        faculty: "Fakülte",
+        department: "Bölüm",
+        category: "Kategori",
+        content: "İçerik",
+        contentPlaceholder: "Not içeriği",
+        files: {
+          title: "Dosyalar",
+          supportedFormats: "Desteklenen formatlar: PDF, Word, Excel, PowerPoint, JPEG, PNG (max: 10MB)",
+          invalidFile: "Geçersiz dosya formatı veya boyutu çok büyük (max: 10MB)"
+        },
+        submit: "Paylaş",
+        submitting: "Paylaşılıyor..."
+      }
+    },
+    detail: {
+      notFound: "Not bulunamadı",
+      delete: {
+        title: "Notu Silmek İstediğinize Emin Misiniz?",
+        description: "Bu işlem geri alınamaz. Not ve ilgili tüm yorumlar kalıcı olarak silinecektir.",
+        cancel: "Vazgeç",
+        confirm: "Sil"
+      },
+      files: "Dosyalar",
+      comments: {
+        title: "Yorumlar",
+        placeholder: "Yorumunuzu yazın...",
+        submit: "Yorum Yap",
+        submitting: "Gönderiliyor...",
+        count: "{{count}} Yorum"
+      }
+    },
+    errors: {
+      loadFailed: "Notlar yüklenirken bir hata oluştu",
+      shareFailed: "Not paylaşılırken bir hata oluştu",
+      deleteFailed: "Not silinirken bir hata oluştu",
+      commentFailed: "Yorum gönderilirken bir hata oluştu",
+      requireLogin: "Yorum yapmak için giriş yapmalısınız",
+      emptyComment: "Yorum boş olamaz",
+      noPermission: "Bu notu silme yetkiniz yok",
+      selectFaculty: "Lütfen bir fakülte seçin",
+      selectDepartment: "Lütfen bir bölüm seçin"
     }
   }
 }; 
