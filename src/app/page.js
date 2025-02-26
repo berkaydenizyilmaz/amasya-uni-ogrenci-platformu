@@ -282,7 +282,7 @@ export default function Home() {
                 <p className="text-theme-text-muted">{t('home.ai.guide.description')}</p>
               </CardContent>
               <CardFooter>
-                <Link href="/amasya/chatbot" className="w-full">
+                <Link href="/amasya/tarihi-yerler" className="w-full">
                   <Button variant="outline" className="w-full group-hover:bg-theme-primary group-hover:text-theme-bg border-theme-primary text-theme-primary transition-colors">
                     {t('home.ai.guide.button')}
                   </Button>

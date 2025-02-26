@@ -38,23 +38,23 @@ export default function GeneralInfo() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative h-[60vh] flex items-center justify-center">
         <div className="absolute inset-0">
           <Image
             src="/images/amasya-unversitesi.jpg"
-            alt={t('university.generalInfo.title')}
-            className="object-cover w-full h-full"
+            alt="Amasya Üniversitesi"
+            className="object-cover w-full h-full brightness-[0.4]"
             width={1920}
             height={1080}
+            priority
           />
-          <div className="absolute inset-0 bg-theme-primary/80" />
         </div>
-        <div className="container relative mx-auto px-4">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-theme-bg">
-            {t('university.generalInfo.title')}
+        <div className="relative text-center px-4">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
+            Amasya Üniversitesi
           </h1>
-          <p className="text-xl md:text-2xl text-theme-bg/90 max-w-3xl">
-            {t('university.generalInfo.subtitle')}
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            Geleceğin bilim ve kültür merkezi
           </p>
         </div>
       </section>

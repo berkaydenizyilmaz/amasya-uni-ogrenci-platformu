@@ -108,23 +108,22 @@ export default function Dormitories() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-[40vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[60vh] flex items-center justify-center">
         <div className="absolute inset-0">
           <Image
-            src="/images/yurtlar.jpg"
+            src="/yurtlar/merzifon-yurdu-1.jpg"
             alt={t('dormitories.title')}
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full brightness-[0.4]"
             width={1920}
             height={1080}
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-theme-primary to-theme-primary-hover opacity-90" />
         </div>
         <div className="relative text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-theme-bg">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
             {t('dormitories.title')}
           </h1>
-          <p className="text-xl md:text-2xl text-theme-bg/90 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
             {t('dormitories.subtitle')}
           </p>
         </div>
