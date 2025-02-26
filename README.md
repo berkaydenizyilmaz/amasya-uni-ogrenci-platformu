@@ -15,7 +15,7 @@ Amasya Üniversitesi öğrencileri için geliştirilmiş kapsamlı bir web platf
 
 ## 🛠️ Teknolojiler
 
-- Next.js 14 (App Router)
+- Next.js 15 (App Router)
 - TypeScript
 - Tailwind CSS
 - Prisma

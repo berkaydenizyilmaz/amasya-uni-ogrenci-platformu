@@ -30,7 +30,8 @@ Amasya Üniversitesi öğrencileri için geliştirilmiş, modern ve kullanıcı 
 ## 3. Proje Yapısı
 
 ### 3.1 Dizin Yapısı
-```
+
+```plaintext
 /src
   /app             # Sayfa bileşenleri ve route'lar
     /api          # API route handlers
@@ -48,36 +49,154 @@ Amasya Üniversitesi öğrencileri için geliştirilmiş, modern ve kullanıcı 
   /utils         # Yardımcı fonksiyonlar
 ```
 
-### 3.2 Ana Modüller
-1. **Üniversite Bilgileri**
-   - Genel tanıtım ve tarihçe
-   - Akademik takvim ve önemli tarihler
+### 3.2 Veritabanı Yapısı
 
-2. **Not Paylaşımı**
-   - Ders notları ve kaynaklar
-   - Fakülte ve bölüm bazlı filtreleme
-   - Dosya yükleme ve indirme sistemi
-   - Yorum ve değerlendirme sistemi
-   - Yer işaretleme özelliği
+Projede PostgreSQL veritabanı kullanılmaktadır. Veritabanı tabloları Prisma ORM aracılığıyla yönetilmektedir. Aşağıda her tablonun kullanım amacı ve içerdiği alanlar detaylı olarak açıklanmıştır.
 
-3. **Etkinlikler**
-   - Etkinlik oluşturma ve düzenleme
-   - Kategori bazlı filtreleme
-   - Takvim görünümü
-   - Katılım yönetimi
-   - Admin onay sistemi
+#### users Tablosu
+Kullanıcı hesaplarının yönetimi için kullanılır. Öğrencilerin platforma kayıt olması, giriş yapması ve profil bilgilerinin tutulması için gereklidir.
 
-4. **Yurt ve Ulaşım**
-   - Yurt bilgileri ve konumları
-   - Otobüs güzergahları ve saatleri
-   - İnteraktif harita entegrasyonu
-   - Durak ve güzergah detayları
+- id (String): Benzersiz kullanıcı kimliği
+- name (String): Kullanıcının tam adı
+- email (String): Benzersiz e-posta adresi
+- password (String): Şifrelenmiş parola
+- role (Enum): Kullanıcı rolü (USER, ADMIN)
+- image (String, Opsiyonel): Profil fotoğrafı
+- createdAt (DateTime): Kayıt tarihi
+- updatedAt (DateTime): Güncelleme tarihi
 
-5. **Amasya Rehberi**
-   - Tarihi yerler ve müzeler
-   - Yöresel lezzetler
-   - Gezi rotaları
-   - Fotoğraf galerisi
+#### posts Tablosu
+Öğrencilerin paylaştığı ders notlarının saklanması için kullanılır. Her not belirli bir fakülte ve bölümle ilişkilendirilir.
+
+- id (String): Benzersiz not kimliği
+- title (String): Not başlığı
+- content (String): Not içeriği
+- category (String): Not kategorisi (Ders notu, Sınav notu vb.)
+- faculty (String): İlgili fakülte adı
+- department (String): İlgili bölüm adı
+- authorId (String): Notu paylaşan kullanıcının ID'si
+- createdAt (DateTime): Oluşturulma tarihi
+- updatedAt (DateTime): Son güncelleme tarihi
+
+#### events Tablosu
+Üniversite içinde düzenlenen etkinliklerin yönetimi için kullanılır. Etkinlikler admin onayından geçtikten sonra yayınlanır.
+
+- id (String): Benzersiz etkinlik kimliği
+- title (String): Etkinlik başlığı
+- description (String): Etkinlik açıklaması
+- date (DateTime): Etkinlik tarihi ve saati
+- location (String): Etkinlik konumu
+- category (String): Etkinlik türü
+- faculty (String, Opsiyonel): İlgili fakülte
+- status (Enum): Etkinlik durumu (PENDING, APPROVED, REJECTED)
+- authorId (String): Etkinliği oluşturan kullanıcı ID'si
+- createdAt (DateTime): Oluşturulma tarihi
+- updatedAt (DateTime): Son güncelleme tarihi
+
+#### comments Tablosu
+Not paylaşımlarına yapılan yorumların saklanması için kullanılır. Her yorum bir not ve bir kullanıcıyla ilişkilidir.
+
+- id (String): Benzersiz yorum kimliği
+- content (String): Yorum metni
+- authorId (String): Yorumu yapan kullanıcı ID'si
+- postId (String): Yorumun yapıldığı not ID'si
+- createdAt (DateTime): Oluşturulma tarihi
+- updatedAt (DateTime): Son güncelleme tarihi
+
+#### files Tablosu
+Not paylaşımlarına eklenen dosyaların bilgilerinin tutulması için kullanılır. Dosyaların kendisi harici bir depolama hizmetinde saklanır.
+
+- id (String): Benzersiz dosya kimliği
+- name (String): Dosyanın orijinal adı
+- url (String): Dosyanın erişim adresi
+- size (Int): Dosya boyutu (byte)
+- type (String): Dosya türü (PDF, DOC vb.)
+- postId (String): Dosyanın eklendiği not ID'si
+- createdAt (DateTime): Yüklenme tarihi
+- updatedAt (DateTime): Son güncelleme tarihi
+
+#### bookmarks Tablosu
+Kullanıcıların daha sonra tekrar bakmak için kaydettiği notların takibi için kullanılır.
+
+- id (String): Benzersiz yer işareti kimliği
+- userId (String): Kaydeden kullanıcı ID'si
+- postId (String): Kaydedilen not ID'si
+- createdAt (DateTime): Oluşturulma tarihi
+- updatedAt (DateTime): Son güncelleme tarihi
+
+#### Enum Tipleri
+
+**Role (Kullanıcı Rolleri)**
+- USER: Normal kullanıcı hesabı
+- ADMIN: Yönetici hesabı, ek yetkiler içerir
+
+**EventStatus (Etkinlik Durumları)**
+- PENDING: Onay bekleyen etkinlik
+- APPROVED: Onaylanmış ve yayında olan etkinlik
+- REJECTED: Reddedilmiş etkinlik
+
+### 3.3 Backend API Yapısı
+
+#### 3.3.1 API Endpoint'leri
+
+##### Kullanıcı İşlemleri
+| Endpoint | Metod | Açıklama |
+|----------|-------|-----------|
+| `/api/auth/register` | POST | Kullanıcı kaydı |
+| `/api/auth/login` | POST | Kullanıcı girişi |
+
+##### Not Paylaşımı
+| Endpoint | Metod | Açıklama |
+|----------|-------|-----------|
+| `/api/posts` | GET | Notları listele |
+| `/api/posts` | POST | Not paylaş |
+| `/api/posts/:id` | GET | Not detayı |
+| `/api/posts/:id` | DELETE | Not sil |
+| `/api/posts/:id/files` | POST | Dosya yükle |
+
+##### Yorumlar
+| Endpoint | Metod | Açıklama |
+|----------|-------|-----------|
+| `/api/posts/:id/comments` | GET | Yorumları listele |
+| `/api/posts/:id/comments` | POST | Yorum yap |
+| `/api/comments/:id` | DELETE | Yorum sil |
+
+##### Etkinlikler
+| Endpoint | Metod | Açıklama |
+|----------|-------|-----------|
+| `/api/events` | GET | Etkinlikleri listele |
+| `/api/events` | POST | Etkinlik oluştur |
+| `/api/events/:id` | GET | Etkinlik detayı |
+| `/api/events/:id` | PUT | Etkinlik güncelle |
+| `/api/events/:id/status` | PUT | Etkinlik durumu güncelle |
+
+##### Yer İşaretleri
+| Endpoint | Metod | Açıklama |
+|----------|-------|-----------|
+| `/api/bookmarks` | GET | Yer işaretlerini listele |
+| `/api/bookmarks` | POST | Yer işareti ekle |
+| `/api/bookmarks/:id` | DELETE | Yer işareti kaldır |
+
+#### 3.3.2 Middleware'ler
+
+- **Auth Middleware**: Kimlik doğrulama ve yetkilendirme
+- **Upload Middleware**: Dosya yükleme ve validasyon
+- **Rate Limiting**: API isteklerini sınırlama
+- **Error Handling**: Hata yönetimi
+- **Logging**: İstek ve hata logları
+
+#### 3.3.3 Güvenlik Önlemleri
+
+| Önlem | Açıklama |
+|-------|-----------|
+| JWT Authentication | Token tabanlı kimlik doğrulama |
+| Role-Based Access Control | Rol tabanlı yetkilendirme |
+| Input Validation | Zod ile girdi doğrulama |
+| File Validation | Dosya tipi ve boyut kontrolü |
+| Rate Limiting | DDoS koruması |
+| CORS Policies | Cross-origin kaynak paylaşımı |
+| XSS Protection | Cross-site scripting koruması |
+| SQL Injection Protection | Prisma ORM ile SQL enjeksiyon koruması |
 
 ## 4. Geliştirme Süreci
 
