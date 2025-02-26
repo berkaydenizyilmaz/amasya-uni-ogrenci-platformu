@@ -63,15 +63,6 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         {/* Logo ve Başlık */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block mb-8">
-            <Image
-              src="/images/logo.png"
-              alt="AÜ Öğrenci Platformu"
-              width={64}
-              height={64}
-              className="mx-auto"
-            />
-          </Link>
           <h1 className="text-2xl font-bold text-theme-text mb-2">
             Aramıza Katılın
           </h1>
